@@ -3,25 +3,21 @@ package com.potapova.helpdesk.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
-@Component
 @Data
-@Entity(name = "attachment")
+@Entity
 public class Attachment {
     @Id
-    @SequenceGenerator(name = "seq_attachment", sequenceName = "attachment_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_attachment")
-    @Column(name = "id")
+    @GeneratedValue
     private Long id;
 
-    @Column(name = "url")
+    @Column(nullable = false)
     private String url;
 
-    @Column(name = "ticket_id")
-    private Long ticketId;
+    @ManyToOne
+    private Ticket ticket;
 
+    @Column(nullable = false)
     @Size(max = 20)
-    @Column(name = "name")
     private String name;
 }

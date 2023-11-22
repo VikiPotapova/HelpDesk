@@ -6,31 +6,28 @@ import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
-@Component
 @Data
-@Entity(name = "history")
+@Entity
 public class History {
     @Id
-    @SequenceGenerator(name = "seq_history", sequenceName = "history_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_history")
-    @Column(name = "id")
+    @GeneratedValue
     private Long id;
 
-    @Column(name = "ticket_id")
-    private Long ticketId;
+    @OneToOne
+    private Ticket ticket;
 
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "date")
-    private Timestamp date;
+    private LocalDateTime date;
 
-    @Column(name = "action")
     private String action;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne
+    private User user;
 
+    @Column(nullable = false)
     @Size(max = 500)
-    @Column(name = "description")
     private String description;
 }

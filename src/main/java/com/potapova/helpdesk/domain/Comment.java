@@ -3,31 +3,26 @@ package com.potapova.helpdesk.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.springframework.stereotype.Component;
+import java.time.LocalDateTime;
 
-import java.sql.Timestamp;
-
-@Component
 @Data
-@Entity(name = "comment")
+@Entity
 public class Comment {
     @Id
-    @SequenceGenerator(name = "seq_comment", sequenceName = "comment_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_comment")
-    @Column(name = "id")
+    @GeneratedValue
     private Long id;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne
+    private User user;
 
+    @Column(nullable = false)
     @Size(max = 500)
-    @Column(name = "text")
     private String text;
 
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "date")
-    private Timestamp date;
+    private LocalDateTime date;
 
-    @Column(name = "ticket_id")
-    private Long ticketId;
+    @ManyToOne
+    private Ticket ticket;
 }

@@ -3,52 +3,44 @@ package com.potapova.helpdesk.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.springframework.stereotype.Component;
+import java.time.LocalDateTime;
 
-import java.sql.Timestamp;
-
-@Component
 @Data
-@Entity(name = "ticket")
+@Entity
 public class Ticket {
     @Id
-    @SequenceGenerator(name = "seq_ticket", sequenceName = "ticket_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_ticket")
-    @Column(name = "id")
+    @GeneratedValue
     private Long id;
 
+    @Column(nullable = false)
     @Size(max = 100)
-    @Column(name = "name")
     private String name;
 
+    @Column(nullable = false)
     @Size(max = 500)
-    @Column(name = "description")
     private String description;
 
+    @Column(updatable = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_on")
-    private Timestamp createdOn;
+    private LocalDateTime createdOn;
 
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "desired_resolution_date")
-    private Timestamp desiredResolutionDate;
+    private LocalDateTime desiredResolutionDate;
 
-    @Column(name = "assignee_id")
-    private Long assigneeId;
+    @ManyToOne
+    private User assignee;
 
-    @Column(name = "owner_id")
-    private Long ownerId;
+    @ManyToOne
+    private User owner;
 
-    @Column(name = "state")
+    @ManyToOne
+    private User approved;
+
     private State state;
 
-    @Column(name = "category")
     private Category category;
 
-    @Column(name = "urgency")
     private Urgency urgency;
-
-    @Column(name = "approved_id")
-    private Long approvedId;
 
 }
