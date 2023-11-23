@@ -3,26 +3,27 @@ package com.potapova.helpdesk.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 public class Comment {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private User user;
 
     @Column(nullable = false)
     @Size(max = 500)
     private String text;
 
-    @Column(nullable = false)
+    @Column(updatable = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime date;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Ticket ticket;
 }

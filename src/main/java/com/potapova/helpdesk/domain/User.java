@@ -9,7 +9,7 @@ import lombok.Data;
 @Entity
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Size(min = 2, max = 20)
@@ -18,12 +18,15 @@ public class User {
     @Size(min = 2, max = 50)
     private String lastName;
 
+    @Column(nullable = false)
     private Role role;
 
+    @Column(nullable = false)
     @Size(max = 100)
     @Pattern(regexp = "^\\S+@\\S+\\.\\S+$")
     private String email;
 
+    @Column(nullable = false)
     @Size(min = 6, max = 20)
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).$")
     private String password;

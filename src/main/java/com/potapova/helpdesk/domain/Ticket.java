@@ -3,13 +3,14 @@ package com.potapova.helpdesk.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 public class Ticket {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -28,19 +29,22 @@ public class Ticket {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime desiredResolutionDate;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private User assignee;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private User owner;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private User approved;
 
+    @Column(nullable = false)
     private State state;
 
+    @Column(nullable = false)
     private Category category;
 
+    @Column(nullable = false)
     private Urgency urgency;
 
 }

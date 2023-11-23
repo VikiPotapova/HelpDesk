@@ -8,13 +8,13 @@ import lombok.Data;
 @Entity
 public class Attachment {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
     private String url;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Ticket ticket;
 
     @Column(nullable = false)
