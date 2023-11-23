@@ -1,26 +1,26 @@
 CREATE TABLE users
 (
-    id         bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id         bigint       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     first_name varchar(20),
     last_name  varchar(50),
-    role       varchar,
-    email      varchar(100),
-    password   varchar(20)
+    role       varchar      not null,
+    email      varchar(100) not null,
+    password   varchar(20)  not null
 );
 
 CREATE TABLE ticket
 (
-    id                      bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name                    varchar(100),
-    description             varchar(500),
-    created_on              timestamp(8),
-    desired_resolution_date timestamp(8),
-    assignee_id             bigint,
-    owner_id                bigint,
-    state                   varchar,
-    category                varchar,
-    urgency                 varchar,
-    approved_id             bigint,
+    id                      bigint       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name                    varchar(100) not null,
+    description             varchar(500) not null,
+    created_on              timestamp(8) not null,
+    desired_resolution_date timestamp(8) not null,
+    assignee_id             bigint       not null,
+    owner_id                bigint       not null,
+    state                   varchar      not null,
+    category                varchar      not null,
+    urgency                 varchar      not null,
+    approved_id             bigint       not null,
     FOREIGN KEY (assignee_id) REFERENCES users (id),
     FOREIGN KEY (owner_id) REFERENCES users (id),
     FOREIGN KEY (approved_id) REFERENCES users (id)
@@ -29,32 +29,32 @@ CREATE TABLE ticket
 
 CREATE TABLE attachment
 (
-    id        bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    url       varchar,
-    ticket_id bigint,
-    name      varchar(20),
+    id        bigint      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    url       varchar     not null,
+    ticket_id bigint      not null,
+    name      varchar(20) not null,
     FOREIGN KEY (ticket_id) REFERENCES ticket (id)
 );
 
 CREATE TABLE comment
 (
-    id        bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user_id   bigint,
-    text      varchar(500),
-    date      timestamp(8),
-    ticket_id bigint,
+    id        bigint       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id   bigint       not null,
+    text      varchar(500) not null,
+    date      timestamp(8) not null,
+    ticket_id bigint       not null,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (ticket_id) REFERENCES ticket (id)
 );
 
 CREATE TABLE feedback
 (
-    id        bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user_id   bigint,
+    id        bigint       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id   bigint       not null,
     rate      int,
-    date      timestamp(8),
-    text      varchar,
-    ticket_id bigint,
+    date      timestamp(8) not null,
+    text      varchar      not null,
+    ticket_id bigint       not null,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (ticket_id) REFERENCES ticket (id)
 );
@@ -62,12 +62,12 @@ CREATE TABLE feedback
 
 CREATE TABLE history
 (
-    id          bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    ticket_id   bigint,
-    date        timestamp(8),
+    id          bigint       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ticket_id   bigint       not null,
+    date        timestamp(8) not null,
     action      varchar,
-    user_id     bigint,
-    description varchar(500),
+    user_id     bigint       not null,
+    description varchar(500) not null,
     FOREIGN KEY (ticket_id) REFERENCES ticket (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
 );

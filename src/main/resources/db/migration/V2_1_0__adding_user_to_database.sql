@@ -6,4 +6,3 @@ values ('William', 'Collins', 'Manager', 'william.collins@gmail.com', 'collins19
 
 insert into users (first_name, last_name, role, email, password)
 values ('James', 'Ford', 'Engineer', 'james.ford@gmail.com', '12345678');
-
