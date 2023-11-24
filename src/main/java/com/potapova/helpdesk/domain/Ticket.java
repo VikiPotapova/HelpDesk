@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -22,12 +23,12 @@ public class Ticket {
     private String description;
 
     @Column(updatable = false, nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime createdOn;
+    @Temporal(TemporalType.DATE)
+    private LocalDate createdOn;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime desiredResolutionDate;
+    @Temporal(TemporalType.DATE)
+    private LocalDate desiredResolutionDate;
 
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
@@ -43,7 +44,7 @@ public class Ticket {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private State state;
+    private Status status;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

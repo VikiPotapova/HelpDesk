@@ -1,6 +1,6 @@
 package com.potapova.helpdesk.domain;
 
-public enum State {
+public enum Status {
     DRAFT,
     NEW,
     APPROVED,

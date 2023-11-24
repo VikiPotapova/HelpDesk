@@ -3,8 +3,7 @@ package com.potapova.helpdesk.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -22,8 +21,8 @@ public class Comment {
     private String text;
 
     @Column(updatable = false, nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime date;
+    @Temporal(TemporalType.DATE)
+    private LocalDate date;
 
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
