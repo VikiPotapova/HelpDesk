@@ -30,21 +30,27 @@ public class Ticket {
     private LocalDateTime desiredResolutionDate;
 
     @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private User assignee;
 
     @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private User owner;
 
     @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private User approved;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private State state;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Urgency urgency;
 
 }

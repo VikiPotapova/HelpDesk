@@ -14,6 +14,7 @@ public class Comment {
     private Long id;
 
     @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private User user;
 
     @Column(nullable = false)
@@ -25,5 +26,6 @@ public class Comment {
     private LocalDateTime date;
 
     @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private Ticket ticket;
 }

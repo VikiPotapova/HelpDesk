@@ -15,6 +15,7 @@ public class Attachment {
     private String url;
 
     @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private Ticket ticket;
 
     @Column(nullable = false)

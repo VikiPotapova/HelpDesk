@@ -13,8 +13,10 @@ public class Feedback {
     private Long id;
 
     @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private User user;
 
+    @Column(nullable = false)
     private Integer rate;
 
     @Column(updatable = false, nullable = false)
@@ -25,5 +27,6 @@ public class Feedback {
     private String text;
 
     @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private Ticket ticket;
 }
