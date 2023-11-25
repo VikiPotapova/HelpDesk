@@ -16,7 +16,7 @@ public class TicketDTOMapper implements Function<Ticket, TicketDTO> {
                 ticket.getDesiredResolutionDate(),
                 ticket.getAssignee(),
                 ticket.getOwner(),
-                ticket.getApproved(),
+                ticket.getApprover(),
                 ticket.getStatus(),
                 ticket.getCategory(),
                 ticket.getUrgency()

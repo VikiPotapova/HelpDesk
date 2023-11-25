@@ -30,17 +30,15 @@ public class Ticket {
     @Temporal(TemporalType.DATE)
     private LocalDate desiredResolutionDate;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
+    @ManyToOne
     private User assignee;
 
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private User owner;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private User approved;
+    @ManyToOne
+    private User approver;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

@@ -20,10 +20,10 @@ CREATE TABLE ticket
     status                  varchar      not null,
     category                varchar      not null,
     urgency                 varchar      not null,
-    approved_id             bigint       not null,
+    approver_id             bigint       not null,
     FOREIGN KEY (assignee_id) REFERENCES users (id),
     FOREIGN KEY (owner_id) REFERENCES users (id),
-    FOREIGN KEY (approved_id) REFERENCES users (id)
+    FOREIGN KEY (approver_id) REFERENCES users (id)
 );
 
 

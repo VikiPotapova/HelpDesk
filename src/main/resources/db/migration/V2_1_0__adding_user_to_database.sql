@@ -8,6 +8,6 @@ insert into users (first_name, last_name, role, email, password)
 values ('James', 'Ford', 'ENGINEER', 'james.ford@gmail.com', '12345678');
 
 insert into ticket (name, description, created_on, desired_resolution_date, assignee_id, owner_id,
-                    status, category, urgency, approved_id)
+                    status, category, urgency, approver_id)
 values ('First ticket', 'Computer broke down', '2023-11-24 18:14:10', '2023-11-26', 1, 3, 'NEW', 'HARDWARE_AND_SOFTWARE',
         'HIGH', 2);
