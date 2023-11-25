@@ -23,7 +23,7 @@ public class Ticket {
     private String description;
 
     @Column(updatable = false, nullable = false)
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdOn;
 
     @Column(nullable = false)
