@@ -14,7 +14,7 @@ public record TicketDTO(
         LocalDate desiredResolutionDate,
         User assignee,
         User owner,
-        User approved,
+        User approver,
         Status status,
         Category category,
         Urgency urgency
