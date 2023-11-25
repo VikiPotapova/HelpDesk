@@ -24,7 +24,7 @@ public class Ticket {
 
     @Column(updatable = false, nullable = false)
     @Temporal(TemporalType.DATE)
-    private LocalDate createdOn;
+    private LocalDateTime createdOn;
 
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)

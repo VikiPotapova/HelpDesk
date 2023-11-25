@@ -13,7 +13,7 @@ CREATE TABLE ticket
     id                      bigint       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name                    varchar(100) not null,
     description             varchar(500) not null,
-    created_on              date         not null,
+    created_on              timestamp    not null,
     desired_resolution_date date         not null,
     assignee_id             bigint       not null,
     owner_id                bigint       not null,
