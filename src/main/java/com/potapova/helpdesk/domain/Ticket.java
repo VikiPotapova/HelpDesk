@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -26,25 +27,29 @@ public class Ticket {
     private LocalDateTime createdOn;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime desiredResolutionDate;
+    @Temporal(TemporalType.DATE)
+    private LocalDate desiredResolutionDate;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private User assignee;
 
     @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private User owner;
 
-    @ManyToOne(optional = false)
-    private User approved;
+    @ManyToOne
+    private User approver;
 
     @Column(nullable = false)
-    private State state;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Urgency urgency;
 
 }
