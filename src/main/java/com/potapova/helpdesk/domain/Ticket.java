@@ -3,6 +3,11 @@ package com.potapova.helpdesk.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
+import org.modelmapper.internal.bytebuddy.implementation.bytecode.constant.DefaultValue;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.convert.DurationFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,6 +29,7 @@ public class Ticket {
 
     @Column(updatable = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     private LocalDateTime createdOn;
 
     @Column(nullable = false)
@@ -40,7 +46,6 @@ public class Ticket {
     @ManyToOne
     private User approver;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
 

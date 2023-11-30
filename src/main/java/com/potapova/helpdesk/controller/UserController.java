@@ -1,6 +1,5 @@
 package com.potapova.helpdesk.controller;
 
-import com.potapova.helpdesk.domain.dto.TicketDTO;
 import com.potapova.helpdesk.domain.dto.UserDTO;
 import com.potapova.helpdesk.service.UserService;
 import lombok.RequiredArgsConstructor;

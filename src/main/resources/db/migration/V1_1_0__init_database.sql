@@ -17,7 +17,7 @@ CREATE TABLE ticket
     desired_resolution_date date         not null,
     assignee_id             bigint,
     owner_id                bigint       not null,
-    status                  varchar      not null,
+    status                  varchar default 'NEW',
     category                varchar      not null,
     urgency                 varchar      not null,
     approver_id             bigint,
