@@ -41,7 +41,7 @@ CREATE TABLE comment
     id        bigint       NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id   bigint       not null,
     text      varchar(500) not null,
-    date      date         not null,
+    date      timestamp    not null,
     ticket_id bigint       not null,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (ticket_id) REFERENCES ticket (id)
@@ -49,12 +49,12 @@ CREATE TABLE comment
 
 CREATE TABLE feedback
 (
-    id        bigint  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user_id   bigint  not null,
+    id        bigint    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id   bigint    not null,
     rate      int,
-    date      date    not null,
-    text      varchar not null,
-    ticket_id bigint  not null,
+    date      timestamp not null,
+    text      varchar   not null,
+    ticket_id bigint    not null,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (ticket_id) REFERENCES ticket (id)
 );
@@ -62,12 +62,12 @@ CREATE TABLE feedback
 
 CREATE TABLE history
 (
-    id          bigint       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    ticket_id   bigint       not null,
-    date        date         not null,
+    id          bigint    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ticket_id   bigint    not null,
+    date        timestamp not null,
     action      varchar,
-    user_id     bigint       not null,
-    description varchar(500) not null,
+    user_id     bigint    not null,
+    description varchar(500),
     FOREIGN KEY (ticket_id) REFERENCES ticket (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
