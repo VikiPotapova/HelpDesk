@@ -17,4 +17,9 @@ public class ExceptionResolver {
     public ResponseEntity<String> noAccessByIdException(NoAccessByIdException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
     }
+
+    @ExceptionHandler(IncorrectStatusException.class)
+    public ResponseEntity<String> incorrectStatusException(IncorrectStatusException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

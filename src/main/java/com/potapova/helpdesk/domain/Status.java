@@ -1,7 +1,5 @@
 package com.potapova.helpdesk.domain;
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
-
 public enum Status {
     DRAFT,
     NEW,

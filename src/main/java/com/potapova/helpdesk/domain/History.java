@@ -36,6 +36,7 @@ public class History {
     @JoinColumn(nullable = false)
     private User user;
 
+    @Column(nullable = false)
     @Size(max = 500)
     private String description;
 }

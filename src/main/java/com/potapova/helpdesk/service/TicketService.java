@@ -12,7 +12,7 @@ public interface TicketService {
     Ticket createTicket(Ticket ticket, Long userId);
 
     Ticket getTicketById(Long id);
-    List<History> getTicketHistory(Long ticketId);
+    //List<History> getTicketHistory(Long ticketId);
     void updateTicketById(TicketDetailsDTO ticketDTO, Long ticketId, Long userId);
     void updateTicketStatus(Status status, Long ticketId, Long userId);
 
