@@ -94,7 +94,8 @@ public class JpaTicketService implements TicketService {
         Ticket existingTicket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new TicketNotFoundException("Ticket with id: " + ticketId + " not found"));
         User user = userService.getUserById(userId);
-        if (user.equals(existingTicket.getOwner())) {
+        if (user.equals(existingTicket.getOwner()) && existingTicket.getStatus().equals(Status.DRAFT)
+                || existingTicket.getStatus().equals(Status.NEW) || existingTicket.getStatus().equals(Status.DECLINED)) {
             modelMapper.map(ticketForUpdateDTO, existingTicket);
             ticketRepository.save(existingTicket);
             addToHistory(existingTicket, user, "The ticket is updated", "The ticket is updated");
