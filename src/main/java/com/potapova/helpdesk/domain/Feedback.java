@@ -2,7 +2,8 @@ package com.potapova.helpdesk.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -19,8 +20,8 @@ public class Feedback {
     private Integer rate;
 
     @Column(updatable = false, nullable = false)
-    @Temporal(TemporalType.DATE)
-    private LocalDate date;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime date;
 
     @Column(nullable = false)
     private String text;

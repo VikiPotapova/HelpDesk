@@ -46,6 +46,7 @@ public class Ticket {
     @ManyToOne
     private User approver;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
 

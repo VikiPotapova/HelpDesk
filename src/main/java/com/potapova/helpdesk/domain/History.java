@@ -2,11 +2,19 @@ package com.potapova.helpdesk.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import java.time.LocalDate;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class History {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,8 +25,9 @@ public class History {
     private Ticket ticket;
 
     @Column(updatable = false, nullable = false)
-    @Temporal(TemporalType.DATE)
-    private LocalDate date;
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
+    private LocalDateTime date;
 
     @Column(nullable = false)
     private String action;
