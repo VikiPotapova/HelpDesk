@@ -1,7 +1,7 @@
 package com.potapova.helpdesk.service;
 
 import com.potapova.helpdesk.domain.*;
-import com.potapova.helpdesk.domain.dto.TicketDetailsDTO;
+import com.potapova.helpdesk.domain.dto.TicketForUpdateDTO;
 import com.potapova.helpdesk.exceptionResolver.IncorrectStatusException;
 import com.potapova.helpdesk.exceptionResolver.NoAccessByIdException;
 import com.potapova.helpdesk.exceptionResolver.TicketNotFoundException;
@@ -34,13 +34,7 @@ public class JpaTicketService implements TicketService {
         } else {
             throw new IncorrectStatusException("The ticket could not been created. Wrong Status.");
         }
-        History history = History.builder()
-                .ticket(ticket)
-                .user(owner)
-                .action("Ticket is created")
-                .description("Ticket is created")
-                .build();
-        historyService.saveTicketToHistory(history);
+        addToHistory(ticket, owner, "Ticket is created", "Ticket is created");
         return ticket;
     }
 
@@ -57,10 +51,12 @@ public class JpaTicketService implements TicketService {
                 .orElseThrow(() -> new TicketNotFoundException("Ticket with id: " + ticketId + " not found"));
         if (existingTicket.getOwner().getRole().equals(Role.EMPLOYEE) && user.getRole().equals(Role.MANAGER)
                 && existingTicket.getStatus().equals(Status.NEW)) {
-            if (status.equals(Status.APPROVED) || status.equals(Status.DECLINED) || status.equals(Status.CANCELLED)) {
+            if (status.equals(Status.APPROVED) || status.equals(Status.DECLINED)) {
                 existingTicket.setStatus(status);
                 existingTicket.setApprover(user);
                 ticketRepository.save(existingTicket);
+                addToHistory(existingTicket, user, "The ticket status is changed", "The status was changed to " +
+                        status.name());
             } else {
                 throw new IncorrectStatusException("The user with id: " + userId + " added incorrect status");
             }
@@ -69,36 +65,53 @@ public class JpaTicketService implements TicketService {
                 existingTicket.setStatus(status);
                 existingTicket.setAssignee(user);
                 ticketRepository.save(existingTicket);
+                addToHistory(existingTicket, user, "The ticket status is changed", "The status was changed to " +
+                        status.name());
             }
         } else if (user.getRole().equals((Role.ENGINEER)) && existingTicket.getStatus().equals(Status.IN_PROGRESS)) {
             if (status.equals(Status.DONE)) {
                 existingTicket.setStatus(status);
                 ticketRepository.save(existingTicket);
+                addToHistory(existingTicket, user, "The ticket status is changed", "The status was changed to " +
+                        status.name());
             }
-        } else if (existingTicket.getStatus().equals(Status.DRAFT) && (user.getRole().equals(Role.EMPLOYEE)
-                || user.getRole().equals(Role.MANAGER))) {
+        } else if (existingTicket.getStatus().equals(Status.DRAFT) && (existingTicket.getOwner().equals(user))) {
             if (status.equals(Status.CANCELLED)) {
                 existingTicket.setStatus(status);
                 ticketRepository.save(existingTicket);
+                addToHistory(existingTicket, user, "The ticket status is changed", "The status was changed to " +
+                        status.name());
             }
         } else {
-            throw new NoAccessByIdException("User with id: " + userId + " does not have access to change this information");
+            throw new NoAccessByIdException("User with id: " + userId +
+                    " does not have access to change this information");
         }
 
     }
 
     @Override
-    public void updateTicketById(TicketDetailsDTO ticketDetailsDTO, Long ticketId, Long userId) {
+    public void updateTicketById(TicketForUpdateDTO ticketForUpdateDTO, Long ticketId, Long userId) {
         Ticket existingTicket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new TicketNotFoundException("Ticket with id: " + ticketId + " not found"));
-        if (userId.equals(existingTicket.getOwner().getId())) {
-            modelMapper.map(ticketDetailsDTO, existingTicket);
+        User user = userService.getUserById(userId);
+        if (user.equals(existingTicket.getOwner())) {
+            modelMapper.map(ticketForUpdateDTO, existingTicket);
             ticketRepository.save(existingTicket);
+            addToHistory(existingTicket, user, "The ticket is updated", "The ticket is updated");
         } else {
             throw new NoAccessByIdException("User with id: " + userId + " does not have access to this information");
         }
+    }
 
-
+    private void addToHistory(Ticket ticket, User user, String action, String description) {
+        History history = History.builder()
+                .ticket(ticket)
+                .user(user)
+                .action(action)
+                .description(description)
+                .build();
+        historyService.saveTicketToHistory(history);
     }
 
 }
+

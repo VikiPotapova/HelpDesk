@@ -4,6 +4,7 @@ import com.potapova.helpdesk.domain.Status;
 import com.potapova.helpdesk.domain.Ticket;
 import com.potapova.helpdesk.domain.dto.TicketDTO;
 import com.potapova.helpdesk.domain.dto.TicketDetailsDTO;
+import com.potapova.helpdesk.domain.dto.TicketForUpdateDTO;
 import com.potapova.helpdesk.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -38,8 +39,8 @@ public class TicketController {
     }
 
     @PutMapping("/{ticketId}/users/{userId}")
-    public ResponseEntity<Void> updateTicket(@PathVariable Long ticketId, @PathVariable Long userId, @RequestBody TicketDetailsDTO ticketDTO) {
-        ticketService.updateTicketById(ticketDTO, ticketId, userId);
+    public ResponseEntity<Void> updateTicket(@PathVariable Long ticketId, @PathVariable Long userId, @RequestBody TicketForUpdateDTO ticketForUpdateDTO) {
+        ticketService.updateTicketById(ticketForUpdateDTO, ticketId, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
