@@ -2,6 +2,7 @@ package com.potapova.helpdesk.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -21,9 +22,9 @@ public class Feedback {
 
     @Column(updatable = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     private LocalDateTime date;
 
-    @Column(nullable = false)
     private String text;
 
     @ManyToOne(optional = false)

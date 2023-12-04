@@ -9,11 +9,11 @@ import com.potapova.helpdesk.repository.TicketRepository;
 import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-@Slf4j
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Data
@@ -39,11 +39,26 @@ public class JpaTicketService implements TicketService {
     }
 
     @Override
-    public Ticket getTicketById(Long id) {
-        return ticketRepository.findById(id)
-                .orElseThrow(() -> new TicketNotFoundException("Ticket with id: " + id + " not found"));
+    public Ticket getTicketById(Long ticketId, Long userId) {
+        User user = userService.getUserById(userId);
+        Ticket ticket = ticketRepository.findById(ticketId).
+                orElseThrow(() -> new TicketNotFoundException("Ticket with id: " + ticketId + " not found"));
+        if (user.equals(ticket.getOwner()) || user.getRole().equals(Role.MANAGER)) {
+            return ticket;
+        } else if (ticket.getStatus().equals(Status.APPROVED) || ticket.getStatus().equals(Status.IN_PROGRESS) ||
+                ticket.getStatus().equals(Status.DONE) && ticket.getAssignee().equals(user)) {
+            return ticket;
+        } else {
+            throw new NoAccessByIdException("User with id: " + userId + " has no access to this information");
+        }
     }
 
+    @Override
+    public List<Ticket> getTicketList(Long userId) {
+        return ticketRepository.findByUserId(userId);
+    }
+
+    @Transactional
     @Override
     public void updateTicketStatus(Status status, Long ticketId, Long userId) {
         User user = userService.getUserById(userId);
@@ -89,6 +104,7 @@ public class JpaTicketService implements TicketService {
 
     }
 
+    @Transactional
     @Override
     public void updateTicketById(TicketForUpdateDTO ticketForUpdateDTO, Long ticketId, Long userId) {
         Ticket existingTicket = ticketRepository.findById(ticketId)
