@@ -54,8 +54,28 @@ public class JpaTicketService implements TicketService {
     }
 
     @Override
-    public List<Ticket> getTicketList(Long userId) {
-        return ticketRepository.findByUserId(userId);
+    public List<Ticket> getAllTicketList(Long userId) {
+        User user = userService.getUserById(userId);
+        if (user.getRole().equals(Role.MANAGER)) {
+            return ticketRepository.findAll();
+        } else {
+            throw new NoAccessByIdException("User with id: " + userId + " has no access to this information");
+        }
+    }
+
+    @Override
+    public List<Ticket> getMyTicketList(Long ownerId) {
+        return ticketRepository.findByOwnerId(ownerId);
+    }
+
+    @Override
+    public List<Ticket> getMyTicketListAsApprover(Long approverId) {
+        return ticketRepository.findByApproverId(approverId);
+    }
+
+    @Override
+    public List<Ticket> getMyTicketListAsAssignee(Long assigneeId) {
+        return ticketRepository.findByAssigneeId(assigneeId);
     }
 
     @Transactional

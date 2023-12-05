@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByTicketId(Long id);
-    List<Comment> findByUserId(Long id);
 }

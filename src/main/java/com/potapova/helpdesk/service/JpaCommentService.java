@@ -36,16 +36,14 @@ public class JpaCommentService implements CommentService {
 
     @Override
     public List<Comment> getCommentsListByTicketId(Long ticketId, Long userId) {
-       // User user = userService.getUserById(userId);
+        User user = userService.getUserById(userId);
         Ticket ticket = ticketService.getTicketById(ticketId, userId);
-        /*List<Comment> commentList;
         if (user.equals(ticket.getOwner()) || user.getRole().equals(Role.MANAGER) || user.equals(ticket.getAssignee())) {
-            commentList = */
-        return commentRepository.findByTicketId(ticketId);
-        /*} else {
+            return commentRepository.findByTicketId(ticketId);
+        } else {
             throw new NoAccessByIdException("The user with id: " + userId + " has no access to get this feedback");
         }
-        return commentList;*/
+
     }
 
 

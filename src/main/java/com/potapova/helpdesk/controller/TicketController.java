@@ -35,10 +35,29 @@ public class TicketController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<TicketDetailsDTO>> getTicketList(@RequestParam Long userId) {
-        return new ResponseEntity<>(ticketService.getTicketList(userId).stream()
+    public ResponseEntity<List<TicketDetailsDTO>> getFullTicketList(@RequestParam Long userId) {
+        return new ResponseEntity<>(ticketService.getAllTicketList(userId).stream()
                 .map(ticket -> modelMapper.map(ticket, TicketDetailsDTO.class)).toList(), HttpStatus.OK);
     }
+
+    @GetMapping("/getAllMine")
+    public ResponseEntity<List<TicketDetailsDTO>> getMyTicketList(@RequestParam Long ownerId) {
+        return new ResponseEntity<>(ticketService.getMyTicketList(ownerId).stream()
+                .map(ticket -> modelMapper.map(ticket, TicketDetailsDTO.class)).toList(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllMineAsApprover")
+    public ResponseEntity<List<TicketDetailsDTO>> getMyTicketListAsApprover(@RequestParam Long approverId) {
+        return new ResponseEntity<>(ticketService.getMyTicketListAsApprover(approverId).stream()
+                .map(ticket -> modelMapper.map(ticket, TicketDetailsDTO.class)).toList(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllMineAsAssignee")
+    public ResponseEntity<List<TicketDetailsDTO>> getMyTicketListAsAssignee(@RequestParam Long assigneeId) {
+        return new ResponseEntity<>(ticketService.getMyTicketListAsAssignee(assigneeId).stream()
+                .map(ticket -> modelMapper.map(ticket, TicketDetailsDTO.class)).toList(), HttpStatus.OK);
+    }
+
 
     @PatchMapping("/status/{ticketId}")
     public ResponseEntity<Void> updateTicketStatus(@PathVariable Long ticketId, @RequestParam Status status, @RequestParam Long userId) {
