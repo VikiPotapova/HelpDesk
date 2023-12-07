@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class TicketDTO {
+
     private String name;
     private String description;
     private LocalDate desiredResolutionDate;

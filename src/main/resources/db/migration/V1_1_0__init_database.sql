@@ -26,7 +26,6 @@ CREATE TABLE ticket
     FOREIGN KEY (approver_id) REFERENCES users (id)
 );
 
-
 CREATE TABLE attachment
 (
     id        bigint      NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -58,7 +57,6 @@ CREATE TABLE feedback
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (ticket_id) REFERENCES ticket (id)
 );
-
 
 CREATE TABLE history
 (

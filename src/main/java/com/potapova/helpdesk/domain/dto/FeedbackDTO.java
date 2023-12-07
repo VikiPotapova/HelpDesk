@@ -1,6 +1,5 @@
 package com.potapova.helpdesk.domain.dto;
 
-import com.potapova.helpdesk.domain.Ticket;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class FeedbackDTO {
+
     private LocalDateTime date;
     private Integer rate;
     private String text;

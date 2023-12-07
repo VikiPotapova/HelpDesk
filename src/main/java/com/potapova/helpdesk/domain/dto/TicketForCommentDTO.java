@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class TicketForCommentDTO {
+
     private String name;
     private String description;
     private LocalDate desiredResolutionDate;

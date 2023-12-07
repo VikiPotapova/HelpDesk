@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class HistoryDTO {
+
     private LocalDateTime date;
     private UserNameDTO user;
     private String action;

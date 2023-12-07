@@ -9,4 +9,3 @@ public interface CommentService {
 
     List<Comment> getCommentsListByTicketId(Long ticketId, Long userId);
 }
-

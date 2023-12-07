@@ -11,13 +11,7 @@ public interface TicketService {
 
     Ticket getTicketById(Long id, Long userId);
 
-    List<Ticket> getAllTicketList(Long userId);
-
-    List<Ticket> getMyTicketList(Long ownerId);
-
-    List<Ticket> getMyTicketListAsApprover(Long approverId);
-
-    List<Ticket> getMyTicketListAsAssignee(Long assigneeId);
+    List<Ticket> getUserTickets(Long userId);
 
     void updateTicketById(TicketForUpdateDTO ticketForUpdateDTO, Long ticketId, Long userId);
 

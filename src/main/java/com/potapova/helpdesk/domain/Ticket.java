@@ -57,5 +57,4 @@ public class Ticket {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Urgency urgency;
-
 }

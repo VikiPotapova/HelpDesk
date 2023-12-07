@@ -1,4 +1,4 @@
-package com.potapova.helpdesk.service;
+package com.potapova.helpdesk.service.impl;
 
 import com.potapova.helpdesk.domain.*;
 import com.potapova.helpdesk.domain.dto.TicketForUpdateDTO;
@@ -6,6 +6,9 @@ import com.potapova.helpdesk.exceptionResolver.IncorrectStatusException;
 import com.potapova.helpdesk.exceptionResolver.NoAccessByIdException;
 import com.potapova.helpdesk.exceptionResolver.TicketNotFoundException;
 import com.potapova.helpdesk.repository.TicketRepository;
+import com.potapova.helpdesk.service.HistoryService;
+import com.potapova.helpdesk.service.TicketService;
+import com.potapova.helpdesk.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +46,9 @@ public class JpaTicketService implements TicketService {
         User user = userService.getUserById(userId);
         Ticket ticket = ticketRepository.findById(ticketId).
                 orElseThrow(() -> new TicketNotFoundException("Ticket with id: " + ticketId + " not found"));
-        if (user.equals(ticket.getOwner()) || user.getRole().equals(Role.MANAGER)) {
+        if (user.equals(ticket.getOwner())) {
+            return ticket;
+        } else if (user.getRole().equals(Role.MANAGER) && !(ticket.getStatus().equals(Status.DRAFT))) {
             return ticket;
         } else if (ticket.getStatus().equals(Status.APPROVED) || ticket.getStatus().equals(Status.IN_PROGRESS) ||
                 ticket.getStatus().equals(Status.DONE) && ticket.getAssignee().equals(user)) {
@@ -54,28 +59,13 @@ public class JpaTicketService implements TicketService {
     }
 
     @Override
-    public List<Ticket> getAllTicketList(Long userId) {
+    public List<Ticket> getUserTickets(Long userId) {
         User user = userService.getUserById(userId);
-        if (user.getRole().equals(Role.MANAGER)) {
-            return ticketRepository.findAll();
-        } else {
-            throw new NoAccessByIdException("User with id: " + userId + " has no access to this information");
-        }
-    }
-
-    @Override
-    public List<Ticket> getMyTicketList(Long ownerId) {
-        return ticketRepository.findByOwnerId(ownerId);
-    }
-
-    @Override
-    public List<Ticket> getMyTicketListAsApprover(Long approverId) {
-        return ticketRepository.findByApproverId(approverId);
-    }
-
-    @Override
-    public List<Ticket> getMyTicketListAsAssignee(Long assigneeId) {
-        return ticketRepository.findByAssigneeId(assigneeId);
+        return switch (user.getRole()) {
+            case MANAGER -> ticketRepository.findApproversTickets(userId);
+            case ENGINEER -> ticketRepository.findAssigneesTickets(userId);
+            case EMPLOYEE -> ticketRepository.findOwnersTickets(userId);
+        };
     }
 
     @Transactional
@@ -84,8 +74,7 @@ public class JpaTicketService implements TicketService {
         User user = userService.getUserById(userId);
         Ticket existingTicket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new TicketNotFoundException("Ticket with id: " + ticketId + " not found"));
-        if (existingTicket.getOwner().getRole().equals(Role.EMPLOYEE) && user.getRole().equals(Role.MANAGER)
-                && existingTicket.getStatus().equals(Status.NEW)) {
+        if (user.getRole().equals(Role.MANAGER) && existingTicket.getStatus().equals(Status.NEW)) {
             if (status.equals(Status.APPROVED) || status.equals(Status.DECLINED)) {
                 existingTicket.setStatus(status);
                 existingTicket.setApprover(user);
@@ -149,6 +138,4 @@ public class JpaTicketService implements TicketService {
                 .build();
         historyService.saveTicketToHistory(history);
     }
-
 }
-

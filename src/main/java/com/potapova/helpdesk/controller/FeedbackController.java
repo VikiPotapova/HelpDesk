@@ -19,7 +19,7 @@ public class FeedbackController {
     private final ModelMapper modelMapper;
 
     @PostMapping("/{userId}/tickets/{ticketId}")
-    public ResponseEntity<FeedbackDTO> createComment(
+    public ResponseEntity<FeedbackDTO> createFeedback(
             @PathVariable Long userId, @PathVariable Long ticketId, @RequestBody FeedbackDTO feedbackDTO) {
         Feedback feedback = feedbackService.createFeedback(modelMapper.map(feedbackDTO, Feedback.class), userId, ticketId);
         return new ResponseEntity<>(modelMapper.map(feedback, FeedbackDTO.class), HttpStatus.CREATED);

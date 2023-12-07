@@ -14,10 +14,6 @@ import java.time.LocalDateTime;
 public class CommentOfTicketDTO {
 
     private LocalDateTime date;
-
     private UserNameDTO user;
-
     private String text;
-
-
 }

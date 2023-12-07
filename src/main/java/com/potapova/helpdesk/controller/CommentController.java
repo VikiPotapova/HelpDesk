@@ -18,7 +18,7 @@ public class CommentController {
     private final CommentService commentService;
     private final ModelMapper modelMapper;
 
-    @PostMapping("/{userId}/tickets/{ticketId}")
+    @PostMapping("/users/{userId}/tickets/{ticketId}")
     public ResponseEntity<CommentOfTicketDTO> createComment(
             @PathVariable Long userId, @PathVariable Long ticketId, @RequestBody CommentOfTicketDTO commentOfTicketDTO) {
         Comment comment = commentService.createComment(modelMapper.map(commentOfTicketDTO, Comment.class), userId, ticketId);
@@ -31,5 +31,4 @@ public class CommentController {
         return new ResponseEntity<>(commentService.getCommentsListByTicketId(ticketId, userId).stream()
                 .map(comment -> modelMapper.map(comment, CommentOfTicketDTO.class)).toList(), HttpStatus.OK);
     }
-
 }
