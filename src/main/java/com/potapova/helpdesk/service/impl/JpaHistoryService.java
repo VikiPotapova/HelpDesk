@@ -4,9 +4,9 @@ import com.potapova.helpdesk.domain.History;
 import com.potapova.helpdesk.repository.HistoryRepository;
 import com.potapova.helpdesk.service.HistoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +20,7 @@ public class JpaHistoryService implements HistoryService {
     }
 
     @Override
-    public List<History> getTicketHistory(Long ticketId) {
-        return historyRepository.findByTicketId(ticketId);
-
+    public Page<History> getTicketHistory(Pageable pageable, Long ticketId) {
+        return historyRepository.findByTicketId(pageable, ticketId);
     }
 }

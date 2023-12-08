@@ -3,6 +3,8 @@ package com.potapova.helpdesk.service;
 import com.potapova.helpdesk.domain.Status;
 import com.potapova.helpdesk.domain.Ticket;
 import com.potapova.helpdesk.domain.dto.TicketForUpdateDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -11,7 +13,7 @@ public interface TicketService {
 
     Ticket getTicketById(Long id, Long userId);
 
-    List<Ticket> getUserTickets(Long userId);
+    Page<Ticket> getUserTickets(Pageable pageable, Long userId);
 
     void updateTicketById(TicketForUpdateDTO ticketForUpdateDTO, Long ticketId, Long userId);
 

@@ -8,6 +8,8 @@ import com.potapova.helpdesk.service.CommentService;
 import com.potapova.helpdesk.service.TicketService;
 import com.potapova.helpdesk.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +25,7 @@ public class JpaCommentService implements CommentService {
 
     @Override
     public Comment createComment(Comment comment, Long userId, Long ticketId) {
-        if (!(accessService.checkIfUserBelongToTicket(userId, ticketId))) {
+        if (!accessService.checkIfUserBelongToTicket(userId, ticketId)) {
             throw new NoAccessByIdException("The user with id: " + userId + " has no access to leave a comment");
         }
         comment.setUser(userService.getUserById(userId));
@@ -33,10 +35,10 @@ public class JpaCommentService implements CommentService {
     }
 
     @Override
-    public List<Comment> getCommentsListByTicketId(Long ticketId, Long userId) {
-        if (!(accessService.checkIfUserBelongToTicket(userId, ticketId))) {
+    public Page<Comment> getCommentsListByTicketId(Pageable pageable, Long ticketId, Long userId) {
+        if (!accessService.checkIfUserBelongToTicket(userId, ticketId)) {
             throw new NoAccessByIdException("The user with id: " + userId + " has no access to get this feedback");
         }
-        return commentRepository.findByTicketId(ticketId);
+        return commentRepository.findByTicketId(pageable, ticketId);
     }
 }

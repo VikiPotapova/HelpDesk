@@ -1,11 +1,11 @@
 package com.potapova.helpdesk.service;
 
 import com.potapova.helpdesk.domain.Comment;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CommentService {
     Comment createComment(Comment comment, Long userId, Long ticketId);
 
-    List<Comment> getCommentsListByTicketId(Long ticketId, Long userId);
+    Page<Comment> getCommentsListByTicketId(Pageable pageable, Long ticketId, Long userId);
 }

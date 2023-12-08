@@ -10,6 +10,8 @@ import com.potapova.helpdesk.service.TicketService;
 import com.potapova.helpdesk.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,22 +42,24 @@ public class JpaFeedbackService implements FeedbackService {
 
     @Override
     public Feedback getFeedbackByTicketId(Long ticketId, Long userId) {
+        Feedback feedback = feedbackRepository.findByTicketId(ticketId);
         if (!(accessService.checkIfUserBelongToTicket(userId, ticketId))) {
             throw new NoAccessByIdException("The user with id: " + userId + " has no access to get this feedback");
-        } else if (Objects.isNull(feedbackRepository.findByTicketId(ticketId))) {
+        } else if (Objects.isNull(feedback)) {
             throw new FeedbackNotFoundException("Feedback to ticket with id: " + ticketId + " not found");
         }
-        return feedbackRepository.findByTicketId(ticketId);
+        return feedback;
     }
 
     @Override
-    public List<Feedback> getAssigneeFeedbackList(Long assigneeId, Long userId) {
+    public Page<Feedback> getAssigneeFeedbacks(Pageable pageable, Long assigneeId, Long userId) {
         User user = userService.getUserById(userId);
+        Page<Feedback> feedbacks = feedbackRepository.findAllByUserId(pageable, assigneeId);
         if (!(user.getRole().equals(Role.MANAGER) || assigneeId.equals(userId))) {
             throw new NoAccessByIdException("The user with id: " + userId + " has no access to get these feedbacks");
-        } else if (Objects.isNull(feedbackRepository.findAllByUserId(assigneeId))) {
+        } else if (Objects.isNull(feedbacks)) {
             throw new FeedbackNotFoundException("Feedbacks are not found");
         }
-        return feedbackRepository.findAllByUserId(assigneeId);
+        return feedbacks;
     }
 }

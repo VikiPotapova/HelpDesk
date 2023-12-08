@@ -1,11 +1,11 @@
 package com.potapova.helpdesk.service;
 
 import com.potapova.helpdesk.domain.History;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface HistoryService {
     void saveTicketToHistory(History history);
 
-    List<History> getTicketHistory(Long ticketId);
+    Page<History> getTicketHistory(Pageable pageable, Long ticketId);
 }

@@ -8,6 +8,10 @@ import com.potapova.helpdesk.domain.dto.TicketForUpdateDTO;
 import com.potapova.helpdesk.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +39,11 @@ public class TicketController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<TicketDetailsDTO>> getFullTicketList(@RequestParam Long userId) {
-        return new ResponseEntity<>(ticketService.getUserTickets(userId).stream()
-                .map(ticket -> modelMapper.map(ticket, TicketDetailsDTO.class)).toList(), HttpStatus.OK);
+    public ResponseEntity<Page<TicketDetailsDTO>> getTicketList(
+            @PageableDefault(value = 5, sort = "createdOn", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam Long userId) {
+        return new ResponseEntity<>(ticketService.getUserTickets(pageable, userId)
+                .map(ticket -> modelMapper.map(ticket, TicketDetailsDTO.class)), HttpStatus.OK);
     }
 
     @PatchMapping("/status/{ticketId}")
