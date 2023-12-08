@@ -1,8 +1,5 @@
 package com.potapova.helpdesk.domain.dto;
 
-import com.potapova.helpdesk.domain.Category;
-import com.potapova.helpdesk.domain.Status;
-import com.potapova.helpdesk.domain.Urgency;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,12 +11,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TicketDTO {
+public class TicketForCommentDTO {
 
     private String name;
     private String description;
     private LocalDate desiredResolutionDate;
-    private Category category;
-    private Urgency urgency;
-    private Status status;
 }

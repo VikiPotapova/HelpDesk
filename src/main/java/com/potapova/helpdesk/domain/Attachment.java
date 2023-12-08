@@ -2,10 +2,16 @@ package com.potapova.helpdesk.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Attachment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

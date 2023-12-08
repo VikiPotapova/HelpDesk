@@ -22,4 +22,9 @@ public class ExceptionResolver {
     public ResponseEntity<String> incorrectStatusException(IncorrectStatusException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(FeedbackNotFoundException.class)
+    public ResponseEntity<String> feedbackNotFoundException(FeedbackNotFoundException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }

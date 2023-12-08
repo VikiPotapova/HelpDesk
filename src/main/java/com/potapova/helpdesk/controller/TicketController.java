@@ -12,10 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/ticket")
+@RequestMapping("/tickets")
 public class TicketController {
 
     private final TicketService ticketService;
@@ -28,8 +30,14 @@ public class TicketController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TicketDetailsDTO> getTicketById(@PathVariable Long id) {
-        return new ResponseEntity<>(modelMapper.map(ticketService.getTicketById(id), TicketDetailsDTO.class), HttpStatus.OK);
+    public ResponseEntity<TicketDetailsDTO> getTicketById(@PathVariable Long id, @RequestParam Long userId) {
+        return new ResponseEntity<>(modelMapper.map(ticketService.getTicketById(id, userId), TicketDetailsDTO.class), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<TicketDetailsDTO>> getFullTicketList(@RequestParam Long userId) {
+        return new ResponseEntity<>(ticketService.getUserTickets(userId).stream()
+                .map(ticket -> modelMapper.map(ticket, TicketDetailsDTO.class)).toList(), HttpStatus.OK);
     }
 
     @PatchMapping("/status/{ticketId}")
@@ -43,5 +51,4 @@ public class TicketController {
         ticketService.updateTicketById(ticketForUpdateDTO, ticketId, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }

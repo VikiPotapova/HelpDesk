@@ -11,10 +11,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class HistoryDTO {
+public class CommentOfTicketDTO {
 
     private LocalDateTime date;
     private UserNameDTO user;
-    private String action;
-    private String description;
+    private String text;
 }
