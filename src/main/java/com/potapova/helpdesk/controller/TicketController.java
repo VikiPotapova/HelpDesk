@@ -6,6 +6,7 @@ import com.potapova.helpdesk.domain.dto.TicketDTO;
 import com.potapova.helpdesk.domain.dto.TicketDetailsDTO;
 import com.potapova.helpdesk.domain.dto.TicketForUpdateDTO;
 import com.potapova.helpdesk.service.TicketService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -28,7 +29,7 @@ public class TicketController {
     private final ModelMapper modelMapper;
 
     @PostMapping("/{userId}")
-    public ResponseEntity<TicketDetailsDTO> createTicket(@PathVariable Long userId, @RequestBody TicketDTO ticketDTO) {
+    public ResponseEntity<TicketDetailsDTO> createTicket(@PathVariable Long userId, @RequestBody @Valid TicketDTO ticketDTO) {
         Ticket ticket = ticketService.createTicket(modelMapper.map(ticketDTO, Ticket.class), userId);
         return new ResponseEntity<>(modelMapper.map(ticket, TicketDetailsDTO.class), HttpStatus.CREATED);
     }
@@ -53,7 +54,7 @@ public class TicketController {
     }
 
     @PutMapping("/{ticketId}/users/{userId}")
-    public ResponseEntity<Void> updateTicket(@PathVariable Long ticketId, @PathVariable Long userId, @RequestBody TicketForUpdateDTO ticketForUpdateDTO) {
+    public ResponseEntity<Void> updateTicket(@PathVariable Long ticketId, @PathVariable Long userId, @RequestBody @Valid TicketForUpdateDTO ticketForUpdateDTO) {
         ticketService.updateTicketById(ticketForUpdateDTO, ticketId, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

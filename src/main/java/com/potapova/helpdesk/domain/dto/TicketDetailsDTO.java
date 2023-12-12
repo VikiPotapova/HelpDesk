@@ -19,22 +19,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class TicketDetailsDTO {
-        @NotBlank
+
         private String name;
-        @NotBlank
         private String description;
-        @CreationTimestamp
         private LocalDateTime createdOn;
-        @NotNull
         private LocalDate desiredResolutionDate;
         private UserDTO assignee;
-        @NotNull
         private UserDTO owner;
         private UserDTO approver;
-        @NotNull
         private Status status;
-        @NotNull
         private Category category;
-        @NotNull
         private Urgency urgency;
 }
