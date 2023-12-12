@@ -5,6 +5,10 @@ import com.potapova.helpdesk.domain.dto.CommentOfTicketDTO;
 import com.potapova.helpdesk.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +30,10 @@ public class CommentController {
     }
 
     @GetMapping("/tickets/{ticketId}")
-    public ResponseEntity<List<CommentOfTicketDTO>> getCommentsListByTicketId(
+    public ResponseEntity<Page<CommentOfTicketDTO>> getCommentsListByTicketId(
+            @PageableDefault(value = 5, sort = "date", direction = Sort.Direction.DESC) Pageable pageable,
             @PathVariable Long ticketId, @RequestParam Long userId) {
-        return new ResponseEntity<>(commentService.getCommentsListByTicketId(ticketId, userId).stream()
-                .map(comment -> modelMapper.map(comment, CommentOfTicketDTO.class)).toList(), HttpStatus.OK);
+        return new ResponseEntity<>(commentService.getCommentsListByTicketId(pageable, ticketId, userId)
+                .map(comment -> modelMapper.map(comment, CommentOfTicketDTO.class)), HttpStatus.OK);
     }
 }

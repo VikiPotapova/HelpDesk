@@ -1,5 +1,6 @@
 package com.potapova.helpdesk.domain.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserNameDTO {
+
     private String firstName;
     private String lastName;
 }

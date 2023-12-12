@@ -5,11 +5,13 @@ import com.potapova.helpdesk.domain.dto.FeedbackDTO;
 import com.potapova.helpdesk.service.FeedbackService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,8 +33,10 @@ public class FeedbackController {
     }
 
     @GetMapping("/users/{assigneeId}")
-    public ResponseEntity<List<FeedbackDTO>> getAssigneeFeedbackList(@PathVariable Long assigneeId, @RequestParam Long userId) {
-        return new ResponseEntity<>(feedbackService.getAssigneeFeedbackList(assigneeId, userId).stream()
-                .map(feedback -> modelMapper.map(feedback, FeedbackDTO.class)).toList(), HttpStatus.OK);
+    public ResponseEntity<Page<FeedbackDTO>> getAssigneeFeedbacks(
+            @PageableDefault(value = 5, sort = "date", direction = Sort.Direction.DESC) Pageable pageable,
+            @PathVariable Long assigneeId, @RequestParam Long userId) {
+        return new ResponseEntity<>(feedbackService.getAssigneeFeedbacks(pageable, assigneeId, userId)
+                .map(feedback -> modelMapper.map(feedback, FeedbackDTO.class)), HttpStatus.OK);
     }
 }

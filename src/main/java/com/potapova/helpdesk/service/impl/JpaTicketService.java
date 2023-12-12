@@ -13,6 +13,8 @@ import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -59,12 +61,12 @@ public class JpaTicketService implements TicketService {
     }
 
     @Override
-    public List<Ticket> getUserTickets(Long userId) {
+    public Page<Ticket> getUserTickets(Pageable pageable, Long userId) {
         User user = userService.getUserById(userId);
         return switch (user.getRole()) {
-            case MANAGER -> ticketRepository.findApproversTickets(userId);
-            case ENGINEER -> ticketRepository.findAssigneesTickets(userId);
-            case EMPLOYEE -> ticketRepository.findOwnersTickets(userId);
+            case MANAGER -> ticketRepository.findApproversTickets(pageable, userId);
+            case ENGINEER -> ticketRepository.findAssigneesTickets(pageable, userId);
+            case EMPLOYEE -> ticketRepository.findOwnersTickets(pageable, userId);
         };
     }
 
