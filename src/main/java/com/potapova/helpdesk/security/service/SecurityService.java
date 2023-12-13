@@ -21,7 +21,7 @@ public class SecurityService {
     private final JwtUtils jwtUtils;
 
     public Optional<String> generateToken(AuthRequest authRequest) {
-        User user = userRepository.getByLogin(authRequest.getEmail());
+        User user = userRepository.getByEmail(authRequest.getEmail());
         if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
             return Optional.of(jwtUtils.generateJwtToken(authRequest.getEmail()));
         }
@@ -30,7 +30,7 @@ public class SecurityService {
 
     @Transactional
     public void registration(RegistrationDTO registrationDTO) {
-        User user = userRepository.getByLogin(registrationDTO.getEmail());
+        User user = userRepository.getByEmail(registrationDTO.getEmail());
         if (Objects.nonNull(user)) {
             throw new SameUserInDatabaseException("The user already exists");
         }

@@ -19,7 +19,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User userFromDataBase = userRepository.getByLogin(username);
+        User userFromDataBase = userRepository.getByEmail(username);
         if (Objects.isNull(userFromDataBase)) {
             throw new UserNotFoundException("User with login: " + username + " is not found");
         }
@@ -27,7 +27,6 @@ public class CustomUserDetailService implements UserDetailsService {
                 .withUsername(userFromDataBase.getEmail())
                 .password(userFromDataBase.getPassword())
                 .roles(userFromDataBase.getRole().toString())
-                //.authorities(userFromDataBase.getRole().name())
                 .build();
     }
 }

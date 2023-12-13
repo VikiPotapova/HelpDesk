@@ -23,7 +23,7 @@ public class JpaUserService implements UserService {
 
     @Override
     public User getUserByLogin(String login) {
-        User user = userRepository.getByLogin(login);
+        User user = userRepository.getByEmail(login);
         if (Objects.isNull(user)) {
             throw new UserNotFoundException("User with email: " + login + " not found");
         }
