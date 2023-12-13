@@ -3,7 +3,7 @@ package com.potapova.helpdesk.service.impl;
 import com.potapova.helpdesk.domain.*;
 import com.potapova.helpdesk.domain.dto.TicketForUpdateDTO;
 import com.potapova.helpdesk.exceptionResolver.IncorrectStatusException;
-import com.potapova.helpdesk.exceptionResolver.NoAccessByIdException;
+import com.potapova.helpdesk.exceptionResolver.NoAccessException;
 import com.potapova.helpdesk.exceptionResolver.TicketNotFoundException;
 import com.potapova.helpdesk.repository.TicketRepository;
 import com.potapova.helpdesk.service.HistoryService;
@@ -15,9 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +30,9 @@ public class JpaTicketService implements TicketService {
 
     @Transactional
     @Override
-    public Ticket createTicket(Ticket ticket, Long userId) {
-        User owner = userService.getUserById(userId);
+    public Ticket createTicket(Ticket ticket) {
+        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+        User owner = userService.getUserByLogin(userLogin);
         ticket.setOwner(owner);
         if (ticket.getStatus().equals(Status.NEW) || ticket.getStatus().equals(Status.DRAFT)) {
             ticketRepository.save(ticket);
@@ -44,8 +44,9 @@ public class JpaTicketService implements TicketService {
     }
 
     @Override
-    public Ticket getTicketById(Long ticketId, Long userId) {
-        User user = userService.getUserById(userId);
+    public Ticket getTicketById(Long ticketId) {
+        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUserByLogin(userLogin);
         Ticket ticket = ticketRepository.findById(ticketId).
                 orElseThrow(() -> new TicketNotFoundException("Ticket with id: " + ticketId + " not found"));
         if (user.equals(ticket.getOwner())) {
@@ -56,24 +57,26 @@ public class JpaTicketService implements TicketService {
                 ticket.getStatus().equals(Status.DONE) && ticket.getAssignee().equals(user)) {
             return ticket;
         } else {
-            throw new NoAccessByIdException("User with id: " + userId + " has no access to this information");
+            throw new NoAccessException("User with login: " + userLogin + " has no access to this information");
         }
     }
 
     @Override
-    public Page<Ticket> getUserTickets(Pageable pageable, Long userId) {
-        User user = userService.getUserById(userId);
+    public Page<Ticket> getUserTickets(Pageable pageable) {
+        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUserByLogin(userLogin);
         return switch (user.getRole()) {
-            case MANAGER -> ticketRepository.findApproversTickets(pageable, userId);
-            case ENGINEER -> ticketRepository.findAssigneesTickets(pageable, userId);
-            case EMPLOYEE -> ticketRepository.findOwnersTickets(pageable, userId);
+            case MANAGER -> ticketRepository.findApproversTickets(pageable, userLogin);
+            case ENGINEER -> ticketRepository.findAssigneesTickets(pageable, userLogin);
+            case EMPLOYEE -> ticketRepository.findOwnersTickets(pageable, userLogin);
         };
     }
 
     @Transactional
     @Override
-    public void updateTicketStatus(Status status, Long ticketId, Long userId) {
-        User user = userService.getUserById(userId);
+    public void updateTicketStatus(Status status, Long ticketId) {
+        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUserByLogin(userLogin);
         Ticket existingTicket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new TicketNotFoundException("Ticket with id: " + ticketId + " not found"));
         if (user.getRole().equals(Role.MANAGER) && existingTicket.getStatus().equals(Status.NEW)) {
@@ -84,7 +87,7 @@ public class JpaTicketService implements TicketService {
                 addToHistory(existingTicket, user, "The ticket status is changed", "The status was changed to " +
                         status.name());
             } else {
-                throw new IncorrectStatusException("The user with id: " + userId + " added incorrect status");
+                throw new IncorrectStatusException("The user with login: " + userLogin + " added incorrect status");
             }
         } else if (user.getRole().equals(Role.ENGINEER) && existingTicket.getStatus().equals(Status.APPROVED)) {
             if (status.equals(Status.IN_PROGRESS)) {
@@ -109,7 +112,7 @@ public class JpaTicketService implements TicketService {
                         status.name());
             }
         } else {
-            throw new NoAccessByIdException("User with id: " + userId +
+            throw new NoAccessException("User with login: " + userLogin +
                     " does not have access to change this information");
         }
 
@@ -117,17 +120,18 @@ public class JpaTicketService implements TicketService {
 
     @Transactional
     @Override
-    public void updateTicketById(TicketForUpdateDTO ticketForUpdateDTO, Long ticketId, Long userId) {
+    public void updateTicketById(TicketForUpdateDTO ticketForUpdateDTO, Long ticketId) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUserByLogin(userEmail);
         Ticket existingTicket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new TicketNotFoundException("Ticket with id: " + ticketId + " not found"));
-        User user = userService.getUserById(userId);
         if (user.equals(existingTicket.getOwner()) && existingTicket.getStatus().equals(Status.DRAFT)
                 || existingTicket.getStatus().equals(Status.NEW) || existingTicket.getStatus().equals(Status.DECLINED)) {
             modelMapper.map(ticketForUpdateDTO, existingTicket);
             ticketRepository.save(existingTicket);
             addToHistory(existingTicket, user, "The ticket is updated", "The ticket is updated");
         } else {
-            throw new NoAccessByIdException("User with id: " + userId + " does not have access to this information");
+            throw new NoAccessException("User with login: " + userEmail + " does not have access to this information");
         }
     }
 

@@ -7,14 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class ExceptionResolver {
-
-    @ExceptionHandler(TicketNotFoundException.class)
-    public ResponseEntity<String> ticketNotFoundException(TicketNotFoundException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(NoAccessByIdException.class)
-    public ResponseEntity<String> noAccessByIdException(NoAccessByIdException e) {
+    @ExceptionHandler(NoAccessException.class)
+    public ResponseEntity<String> noAccessByIdException(NoAccessException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
     }
 
@@ -23,8 +17,13 @@ public class ExceptionResolver {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(FeedbackNotFoundException.class)
-    public ResponseEntity<String> feedbackNotFoundException(FeedbackNotFoundException e) {
+    @ExceptionHandler(SameUserInDatabaseException.class)
+    public ResponseEntity<String> sameUserInDatabaseException(SameUserInDatabaseException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<String> notFoundException(NotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }

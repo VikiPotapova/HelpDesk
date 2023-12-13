@@ -2,7 +2,7 @@ package com.potapova.helpdesk.service.impl;
 
 import com.potapova.helpdesk.domain.*;
 import com.potapova.helpdesk.exceptionResolver.FeedbackNotFoundException;
-import com.potapova.helpdesk.exceptionResolver.NoAccessByIdException;
+import com.potapova.helpdesk.exceptionResolver.NoAccessException;
 import com.potapova.helpdesk.repository.FeedbackRepository;
 import com.potapova.helpdesk.service.AccessService;
 import com.potapova.helpdesk.service.FeedbackService;
@@ -12,9 +12,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -28,11 +28,12 @@ public class JpaFeedbackService implements FeedbackService {
 
     @Transactional
     @Override
-    public Feedback createFeedback(Feedback feedback, Long userId, Long ticketId) {
-        User user = userService.getUserById(userId);
-        Ticket ticket = ticketService.getTicketById(ticketId, userId);
+    public Feedback createFeedback(Feedback feedback, Long ticketId) {
+        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUserByLogin(userLogin);
+        Ticket ticket = ticketService.getTicketById(ticketId);
         if (!(user.equals(ticket.getOwner()) && ticket.getStatus().equals(Status.DONE))) {
-            throw new NoAccessByIdException("User with id: " + userId + " has no access to create a feedback");
+            throw new NoAccessException("User with login: " + userLogin + " has no access to create a feedback");
         }
         feedback.setUser(user);
         feedback.setTicket(ticket);
@@ -41,10 +42,12 @@ public class JpaFeedbackService implements FeedbackService {
     }
 
     @Override
-    public Feedback getFeedbackByTicketId(Long ticketId, Long userId) {
+    public Feedback getFeedbackByTicketId(Long ticketId) {
+        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUserByLogin(userLogin);
         Feedback feedback = feedbackRepository.findByTicketId(ticketId);
-        if (!(accessService.checkIfUserBelongToTicket(userId, ticketId))) {
-            throw new NoAccessByIdException("The user with id: " + userId + " has no access to get this feedback");
+        if (!(accessService.checkIfUserBelongToTicket(user, ticketId))) {
+            throw new NoAccessException("The user with login: " + userLogin + " has no access to get this feedback");
         } else if (Objects.isNull(feedback)) {
             throw new FeedbackNotFoundException("Feedback to ticket with id: " + ticketId + " not found");
         }
@@ -52,11 +55,13 @@ public class JpaFeedbackService implements FeedbackService {
     }
 
     @Override
-    public Page<Feedback> getAssigneeFeedbacks(Pageable pageable, Long assigneeId, Long userId) {
-        User user = userService.getUserById(userId);
+    public Page<Feedback> getAssigneeFeedbacks(Pageable pageable, Long assigneeId) {
+        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUserByLogin(userLogin);
+        User assignee = userService.getUserById(assigneeId);
         Page<Feedback> feedbacks = feedbackRepository.findAllByUserId(pageable, assigneeId);
-        if (!(user.getRole().equals(Role.MANAGER) || assigneeId.equals(userId))) {
-            throw new NoAccessByIdException("The user with id: " + userId + " has no access to get these feedbacks");
+        if (!(user.getRole().equals(Role.MANAGER) || user.equals(assignee))) {
+            throw new NoAccessException("The user with login: " + userLogin + " has no access to get these feedbacks");
         } else if (Objects.isNull(feedbacks)) {
             throw new FeedbackNotFoundException("Feedbacks are not found");
         }

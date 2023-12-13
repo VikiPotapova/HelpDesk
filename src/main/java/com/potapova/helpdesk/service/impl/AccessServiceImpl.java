@@ -16,9 +16,8 @@ public class AccessServiceImpl implements AccessService {
     private final TicketService ticketService;
 
     @Override
-    public Boolean checkIfUserBelongToTicket(Long userId, Long ticketId) {
-        User user = userService.getUserById(userId);
-        Ticket ticket = ticketService.getTicketById(ticketId, userId);
+    public Boolean checkIfUserBelongToTicket(User user, Long ticketId) {
+        Ticket ticket = ticketService.getTicketById(ticketId);
         return user.equals(ticket.getOwner()) || user.equals(ticket.getApprover()) || user.equals(ticket.getAssignee());
     }
 }

@@ -9,14 +9,14 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface TicketService {
-    Ticket createTicket(Ticket ticket, Long userId);
+    Ticket createTicket(Ticket ticket);
 
-    Ticket getTicketById(Long id, Long userId);
+    Ticket getTicketById(Long id);
 
-    Page<Ticket> getUserTickets(Pageable pageable, Long userId);
+    Page<Ticket> getUserTickets(Pageable pageable);
 
-    void updateTicketById(TicketForUpdateDTO ticketForUpdateDTO, Long ticketId, Long userId);
+    void updateTicketById(TicketForUpdateDTO ticketForUpdateDTO, Long ticketId);
 
-    void updateTicketStatus(Status status, Long ticketId, Long userId);
+    void updateTicketStatus(Status status, Long ticketId);
 
 }

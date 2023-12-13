@@ -28,34 +28,34 @@ public class TicketController {
     private final TicketService ticketService;
     private final ModelMapper modelMapper;
 
-    @PostMapping("/{userId}")
-    public ResponseEntity<TicketDetailsDTO> createTicket(@PathVariable Long userId, @RequestBody @Valid TicketDTO ticketDTO) {
-        Ticket ticket = ticketService.createTicket(modelMapper.map(ticketDTO, Ticket.class), userId);
+    @PostMapping("/create")
+    public ResponseEntity<TicketDetailsDTO> createTicket(@RequestBody @Valid TicketDTO ticketDTO) {
+        Ticket ticket = ticketService.createTicket(modelMapper.map(ticketDTO, Ticket.class));
         return new ResponseEntity<>(modelMapper.map(ticket, TicketDetailsDTO.class), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TicketDetailsDTO> getTicketById(@PathVariable Long id, @RequestParam Long userId) {
-        return new ResponseEntity<>(modelMapper.map(ticketService.getTicketById(id, userId), TicketDetailsDTO.class), HttpStatus.OK);
+    public ResponseEntity<TicketDetailsDTO> getTicketById(@PathVariable Long id) {
+        return new ResponseEntity<>(modelMapper.map(ticketService.getTicketById(id), TicketDetailsDTO.class), HttpStatus.OK);
     }
 
     @GetMapping("/getAll")
     public ResponseEntity<Page<TicketDetailsDTO>> getTicketList(
-            @PageableDefault(value = 5, sort = "createdOn", direction = Sort.Direction.DESC) Pageable pageable,
-            @RequestParam Long userId) {
-        return new ResponseEntity<>(ticketService.getUserTickets(pageable, userId)
+            @PageableDefault(value = 5, sort = "createdOn", direction = Sort.Direction.DESC) Pageable pageable) {
+        return new ResponseEntity<>(ticketService.getUserTickets(pageable)
                 .map(ticket -> modelMapper.map(ticket, TicketDetailsDTO.class)), HttpStatus.OK);
     }
 
     @PatchMapping("/status/{ticketId}")
-    public ResponseEntity<Void> updateTicketStatus(@PathVariable Long ticketId, @RequestParam Status status, @RequestParam Long userId) {
-        ticketService.updateTicketStatus(status, ticketId, userId);
+    public ResponseEntity<Void> updateTicketStatus(@PathVariable Long ticketId, @RequestParam Status status) {
+        ticketService.updateTicketStatus(status, ticketId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/{ticketId}/users/{userId}")
-    public ResponseEntity<Void> updateTicket(@PathVariable Long ticketId, @PathVariable Long userId, @RequestBody @Valid TicketForUpdateDTO ticketForUpdateDTO) {
-        ticketService.updateTicketById(ticketForUpdateDTO, ticketId, userId);
+    public ResponseEntity<Void> updateTicket(@PathVariable Long ticketId,
+                                             @RequestBody @Valid TicketForUpdateDTO ticketForUpdateDTO) {
+        ticketService.updateTicketById(ticketForUpdateDTO, ticketId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

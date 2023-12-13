@@ -22,18 +22,18 @@ public class CommentController {
     private final CommentService commentService;
     private final ModelMapper modelMapper;
 
-    @PostMapping("/users/{userId}/tickets/{ticketId}")
+    @PostMapping("/create/tickets/{ticketId}")
     public ResponseEntity<CommentOfTicketDTO> createComment(
-            @PathVariable Long userId, @PathVariable Long ticketId, @RequestBody CommentOfTicketDTO commentOfTicketDTO) {
-        Comment comment = commentService.createComment(modelMapper.map(commentOfTicketDTO, Comment.class), userId, ticketId);
+            @PathVariable Long ticketId, @RequestBody CommentOfTicketDTO commentOfTicketDTO) {
+        Comment comment = commentService.createComment(modelMapper.map(commentOfTicketDTO, Comment.class), ticketId);
         return new ResponseEntity<>(modelMapper.map(comment, CommentOfTicketDTO.class), HttpStatus.CREATED);
     }
 
     @GetMapping("/tickets/{ticketId}")
     public ResponseEntity<Page<CommentOfTicketDTO>> getCommentsListByTicketId(
             @PageableDefault(value = 5, sort = "date", direction = Sort.Direction.DESC) Pageable pageable,
-            @PathVariable Long ticketId, @RequestParam Long userId) {
-        return new ResponseEntity<>(commentService.getCommentsListByTicketId(pageable, ticketId, userId)
+            @PathVariable Long ticketId) {
+        return new ResponseEntity<>(commentService.getCommentsListByTicketId(pageable, ticketId)
                 .map(comment -> modelMapper.map(comment, CommentOfTicketDTO.class)), HttpStatus.OK);
     }
 }

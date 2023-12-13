@@ -1,6 +1,7 @@
 package com.potapova.helpdesk.service;
 
-public interface AccessService {
+import com.potapova.helpdesk.domain.User;
 
-    Boolean checkIfUserBelongToTicket(Long userId, Long ticketId);
+public interface AccessService {
+    Boolean checkIfUserBelongToTicket(User user, Long ticketId);
 }

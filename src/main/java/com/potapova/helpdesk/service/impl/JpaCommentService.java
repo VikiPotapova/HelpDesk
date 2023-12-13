@@ -1,7 +1,8 @@
 package com.potapova.helpdesk.service.impl;
 
 import com.potapova.helpdesk.domain.Comment;
-import com.potapova.helpdesk.exceptionResolver.NoAccessByIdException;
+import com.potapova.helpdesk.domain.User;
+import com.potapova.helpdesk.exceptionResolver.NoAccessException;
 import com.potapova.helpdesk.repository.CommentRepository;
 import com.potapova.helpdesk.service.AccessService;
 import com.potapova.helpdesk.service.CommentService;
@@ -10,9 +11,8 @@ import com.potapova.helpdesk.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,20 +24,24 @@ public class JpaCommentService implements CommentService {
     private final AccessService accessService;
 
     @Override
-    public Comment createComment(Comment comment, Long userId, Long ticketId) {
-        if (!accessService.checkIfUserBelongToTicket(userId, ticketId)) {
-            throw new NoAccessByIdException("The user with id: " + userId + " has no access to leave a comment");
+    public Comment createComment(Comment comment, Long ticketId) {
+        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUserByLogin(userLogin);
+        if (!accessService.checkIfUserBelongToTicket(user, ticketId)) {
+            throw new NoAccessException("The user with login: " + userLogin + " has no access to leave a comment");
         }
-        comment.setUser(userService.getUserById(userId));
-        comment.setTicket(ticketService.getTicketById(ticketId, userId));
+        comment.setUser(user);
+        comment.setTicket(ticketService.getTicketById(ticketId));
         commentRepository.save(comment);
         return comment;
     }
 
     @Override
-    public Page<Comment> getCommentsListByTicketId(Pageable pageable, Long ticketId, Long userId) {
-        if (!accessService.checkIfUserBelongToTicket(userId, ticketId)) {
-            throw new NoAccessByIdException("The user with id: " + userId + " has no access to get this feedback");
+    public Page<Comment> getCommentsListByTicketId(Pageable pageable, Long ticketId) {
+        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.getUserByLogin(userLogin);
+        if (!accessService.checkIfUserBelongToTicket(user, ticketId)) {
+            throw new NoAccessException("The user with login: " + userLogin + " has no access to get this feedback");
         }
         return commentRepository.findByTicketId(pageable, ticketId);
     }
