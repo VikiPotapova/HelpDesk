@@ -3,9 +3,15 @@ package com.potapova.helpdesk.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "users")
 public class User {
     @Id
@@ -24,11 +30,11 @@ public class User {
 
     @Column(nullable = false)
     @Size(max = 100)
-    @Pattern(regexp = "^\\S+@\\S+\\.\\S+$")
+    //@Pattern(regexp = "^\\S+@\\S+\\.\\S+$")
     private String email;
 
     @Column(nullable = false)
-    @Size(min = 6, max = 20)
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).$")
+    @Size(min = 6, max = 100)
+    // @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).$")
     private String password;
 }

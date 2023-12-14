@@ -12,23 +12,22 @@ import org.springframework.stereotype.Repository;
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Query("""
             SELECT t FROM Ticket t 
-            WHERE t.owner.id=:id
-            AND (t.status='DRAFT' OR t.status='NEW' OR t.status='APPROVED' OR t.status='IN_PROGRESS' OR t.status='DONE')
+            WHERE t.owner.email=:login
             """)
-    Page<Ticket> findOwnersTickets(Pageable pageable, Long id);
+    Page<Ticket> findOwnersTickets(Pageable pageable, String login);
 
     @Query("""
             SELECT t FROM Ticket t 
             WHERE t.status='APPROVED'
-            OR (t.assignee.id=:id AND (t.status='IN_PROGRESS' OR t.status='DONE'))
+            OR (t.assignee.email=:login AND (t.status='IN_PROGRESS' OR t.status='DONE'))
             """)
-    Page<Ticket> findAssigneesTickets(Pageable pageable, Long id);
+    Page<Ticket> findAssigneesTickets(Pageable pageable, String login);
 
     @Query("""
             SELECT t FROM Ticket t 
             WHERE t.status='NEW'
-            OR (t.approver.id=:id 
+            OR (t.approver.email=:login 
             AND (t.status='APPROVED' OR t.status='DECLINED' OR t.status='IN_PROGRESS' OR t.status='DONE'))
             """)
-    Page<Ticket> findApproversTickets(Pageable pageable, Long id);
+    Page<Ticket> findApproversTickets(Pageable pageable, String login);
 }
