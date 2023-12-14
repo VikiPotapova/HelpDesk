@@ -26,7 +26,7 @@ public class TicketController {
     private final TicketService ticketService;
     private final ModelMapper modelMapper;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<TicketDetailsDTO> createTicket(@RequestBody @Valid TicketDTO ticketDTO) {
         Ticket ticket = ticketService.createTicket(modelMapper.map(ticketDTO, Ticket.class));
         return new ResponseEntity<>(modelMapper.map(ticket, TicketDetailsDTO.class), HttpStatus.CREATED);
@@ -37,7 +37,7 @@ public class TicketController {
         return new ResponseEntity<>(modelMapper.map(ticketService.getTicketById(id), TicketDetailsDTO.class), HttpStatus.OK);
     }
 
-    @GetMapping("/getAll")
+    @GetMapping
     public ResponseEntity<Page<TicketDetailsDTO>> getTicketList(
             @PageableDefault(value = 5, sort = "createdOn", direction = Sort.Direction.DESC) Pageable pageable) {
         return new ResponseEntity<>(ticketService.getUserTickets(pageable)
@@ -50,7 +50,7 @@ public class TicketController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/{ticketId}/users/{userId}")
+    @PutMapping("/{ticketId}")
     public ResponseEntity<Void> updateTicket(@PathVariable Long ticketId,
                                              @RequestBody @Valid TicketForUpdateDTO ticketForUpdateDTO) {
         ticketService.updateTicketById(ticketForUpdateDTO, ticketId);

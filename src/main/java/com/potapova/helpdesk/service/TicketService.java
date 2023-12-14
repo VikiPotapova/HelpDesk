@@ -19,4 +19,5 @@ public interface TicketService {
 
     void updateTicketStatus(Status status, Long ticketId);
 
+
 }

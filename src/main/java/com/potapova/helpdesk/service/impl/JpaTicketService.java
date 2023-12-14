@@ -31,8 +31,7 @@ public class JpaTicketService implements TicketService {
     @Transactional
     @Override
     public Ticket createTicket(Ticket ticket) {
-        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
-        User owner = userService.getUserByLogin(userLogin);
+        User owner = userService.getCurrentUser();
         ticket.setOwner(owner);
         if (ticket.getStatus().equals(Status.NEW) || ticket.getStatus().equals(Status.DRAFT)) {
             ticketRepository.save(ticket);
@@ -45,8 +44,7 @@ public class JpaTicketService implements TicketService {
 
     @Override
     public Ticket getTicketById(Long ticketId) {
-        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUserByLogin(userLogin);
+        User user = userService.getCurrentUser();
         Ticket ticket = ticketRepository.findById(ticketId).
                 orElseThrow(() -> new TicketNotFoundException("Ticket with id: " + ticketId + " not found"));
         if (user.equals(ticket.getOwner())) {
@@ -57,26 +55,24 @@ public class JpaTicketService implements TicketService {
                 ticket.getStatus().equals(Status.DONE) && ticket.getAssignee().equals(user)) {
             return ticket;
         } else {
-            throw new NoAccessException("User with login: " + userLogin + " has no access to this information");
+            throw new NoAccessException("User with login: " + user.getEmail() + " has no access to this information");
         }
     }
 
     @Override
     public Page<Ticket> getUserTickets(Pageable pageable) {
-        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUserByLogin(userLogin);
+        User user = userService.getCurrentUser();
         return switch (user.getRole()) {
-            case MANAGER -> ticketRepository.findApproversTickets(pageable, userLogin);
-            case ENGINEER -> ticketRepository.findAssigneesTickets(pageable, userLogin);
-            case EMPLOYEE -> ticketRepository.findOwnersTickets(pageable, userLogin);
+            case MANAGER -> ticketRepository.findApproversTickets(pageable, user.getEmail());
+            case ENGINEER -> ticketRepository.findAssigneesTickets(pageable, user.getEmail());
+            case EMPLOYEE -> ticketRepository.findOwnersTickets(pageable, user.getEmail());
         };
     }
 
     @Transactional
     @Override
     public void updateTicketStatus(Status status, Long ticketId) {
-        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUserByLogin(userLogin);
+        User user = userService.getCurrentUser();
         Ticket existingTicket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new TicketNotFoundException("Ticket with id: " + ticketId + " not found"));
         if (user.getRole().equals(Role.MANAGER) && existingTicket.getStatus().equals(Status.NEW)) {
@@ -87,7 +83,7 @@ public class JpaTicketService implements TicketService {
                 addToHistory(existingTicket, user, "The ticket status is changed", "The status was changed to " +
                         status.name());
             } else {
-                throw new IncorrectStatusException("The user with login: " + userLogin + " added incorrect status");
+                throw new IncorrectStatusException("The user with login: " + user.getEmail() + " added incorrect status");
             }
         } else if (user.getRole().equals(Role.ENGINEER) && existingTicket.getStatus().equals(Status.APPROVED)) {
             if (status.equals(Status.IN_PROGRESS)) {
@@ -112,7 +108,7 @@ public class JpaTicketService implements TicketService {
                         status.name());
             }
         } else {
-            throw new NoAccessException("User with login: " + userLogin +
+            throw new NoAccessException("User with login: " + user.getEmail() +
                     " does not have access to change this information");
         }
 
@@ -121,8 +117,7 @@ public class JpaTicketService implements TicketService {
     @Transactional
     @Override
     public void updateTicketById(TicketForUpdateDTO ticketForUpdateDTO, Long ticketId) {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUserByLogin(userEmail);
+        User user = userService.getCurrentUser();
         Ticket existingTicket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new TicketNotFoundException("Ticket with id: " + ticketId + " not found"));
         if (user.equals(existingTicket.getOwner()) && existingTicket.getStatus().equals(Status.DRAFT)
@@ -131,7 +126,7 @@ public class JpaTicketService implements TicketService {
             ticketRepository.save(existingTicket);
             addToHistory(existingTicket, user, "The ticket is updated", "The ticket is updated");
         } else {
-            throw new NoAccessException("User with login: " + userEmail + " does not have access to this information");
+            throw new NoAccessException("User with login: " + user.getEmail() + " does not have access to this information");
         }
     }
 
@@ -144,4 +139,6 @@ public class JpaTicketService implements TicketService {
                 .build();
         historyService.saveTicketToHistory(history);
     }
+
+
 }

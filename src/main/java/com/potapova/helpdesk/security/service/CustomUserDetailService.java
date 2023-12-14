@@ -3,6 +3,7 @@ package com.potapova.helpdesk.security.service;
 import com.potapova.helpdesk.domain.User;
 import com.potapova.helpdesk.exceptionResolver.UserNotFoundException;
 import com.potapova.helpdesk.repository.UserRepository;
+import com.potapova.helpdesk.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,14 +16,11 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CustomUserDetailService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User userFromDataBase = userRepository.getByEmail(username);
-        if (Objects.isNull(userFromDataBase)) {
-            throw new UserNotFoundException("User with login: " + username + " is not found");
-        }
+        User userFromDataBase = userService.getUserByLogin(username);
         return org.springframework.security.core.userdetails.User
                 .withUsername(userFromDataBase.getEmail())
                 .password(userFromDataBase.getPassword())

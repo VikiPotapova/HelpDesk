@@ -2,6 +2,7 @@ package com.potapova.helpdesk.security.service;
 
 import com.potapova.helpdesk.domain.User;
 import com.potapova.helpdesk.exceptionResolver.SameUserInDatabaseException;
+import com.potapova.helpdesk.exceptionResolver.UserNotFoundException;
 import com.potapova.helpdesk.repository.UserRepository;
 import com.potapova.helpdesk.security.domain.AuthRequest;
 import com.potapova.helpdesk.security.domain.RegistrationDTO;
@@ -21,7 +22,8 @@ public class SecurityService {
     private final JwtUtils jwtUtils;
 
     public Optional<String> generateToken(AuthRequest authRequest) {
-        User user = userRepository.getByEmail(authRequest.getEmail());
+        User user = userRepository.getByEmail(authRequest.getEmail()).orElseThrow(() ->
+                new UserNotFoundException("User is not found"));
         if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
             return Optional.of(jwtUtils.generateJwtToken(authRequest.getEmail()));
         }
@@ -30,8 +32,7 @@ public class SecurityService {
 
     @Transactional
     public void registration(RegistrationDTO registrationDTO) {
-        User user = userRepository.getByEmail(registrationDTO.getEmail());
-        if (Objects.nonNull(user)) {
+        if (userRepository.getByEmail(registrationDTO.getEmail()).isPresent()) {
             throw new SameUserInDatabaseException("The user already exists");
         }
         User newUser = User.builder()

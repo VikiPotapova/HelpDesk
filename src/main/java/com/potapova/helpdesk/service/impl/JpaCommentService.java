@@ -25,10 +25,9 @@ public class JpaCommentService implements CommentService {
 
     @Override
     public Comment createComment(Comment comment, Long ticketId) {
-        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUserByLogin(userLogin);
-        if (!accessService.checkIfUserBelongToTicket(user, ticketId)) {
-            throw new NoAccessException("The user with login: " + userLogin + " has no access to leave a comment");
+        User user = userService.getCurrentUser();
+        if (!accessService.isUserBelongToTicket(user, ticketId)) {
+            throw new NoAccessException("The user with login: " + user.getEmail() + " has no access to leave a comment");
         }
         comment.setUser(user);
         comment.setTicket(ticketService.getTicketById(ticketId));
@@ -38,10 +37,9 @@ public class JpaCommentService implements CommentService {
 
     @Override
     public Page<Comment> getCommentsListByTicketId(Pageable pageable, Long ticketId) {
-        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUserByLogin(userLogin);
-        if (!accessService.checkIfUserBelongToTicket(user, ticketId)) {
-            throw new NoAccessException("The user with login: " + userLogin + " has no access to get this feedback");
+        User user = userService.getCurrentUser();
+        if (!accessService.isUserBelongToTicket(user, ticketId)) {
+            throw new NoAccessException("The user with login: " + user.getEmail() + " has no access to get this feedback");
         }
         return commentRepository.findByTicketId(pageable, ticketId);
     }

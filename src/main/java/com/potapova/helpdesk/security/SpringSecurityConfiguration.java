@@ -52,7 +52,7 @@ public class SpringSecurityConfiguration {
                                 )
                                 .requestMatchers(new AntPathRequestMatcher("/tickets", "PUT")).hasRole("EMPLOYEE")
 
-                                //.requestMatchers(new AntPathRequestMatcher("/histories/tickets", "GET")).hasRole("EMPLOYEE")
+                                .requestMatchers(new AntPathRequestMatcher("/histories/tickets", "GET")).hasRole("MANAGER")
 
                                 .requestMatchers(new AntPathRequestMatcher("/comments/users", "POST")).hasAnyRole(
                                         "EMPLOYEE", "MANAGER", "ENGINEER"

@@ -29,11 +29,10 @@ public class JpaFeedbackService implements FeedbackService {
     @Transactional
     @Override
     public Feedback createFeedback(Feedback feedback, Long ticketId) {
-        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUserByLogin(userLogin);
+        User user = userService.getCurrentUser();
         Ticket ticket = ticketService.getTicketById(ticketId);
         if (!(user.equals(ticket.getOwner()) && ticket.getStatus().equals(Status.DONE))) {
-            throw new NoAccessException("User with login: " + userLogin + " has no access to create a feedback");
+            throw new NoAccessException("User with login: " + user.getEmail() + " has no access to create a feedback");
         }
         feedback.setUser(user);
         feedback.setTicket(ticket);
@@ -43,11 +42,10 @@ public class JpaFeedbackService implements FeedbackService {
 
     @Override
     public Feedback getFeedbackByTicketId(Long ticketId) {
-        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUserByLogin(userLogin);
+        User user = userService.getCurrentUser();
         Feedback feedback = feedbackRepository.findByTicketId(ticketId);
-        if (!(accessService.checkIfUserBelongToTicket(user, ticketId))) {
-            throw new NoAccessException("The user with login: " + userLogin + " has no access to get this feedback");
+        if (!(accessService.isUserBelongToTicket(user, ticketId))) {
+            throw new NoAccessException("The user with login: " + user.getEmail() + " has no access to get this feedback");
         } else if (Objects.isNull(feedback)) {
             throw new FeedbackNotFoundException("Feedback to ticket with id: " + ticketId + " not found");
         }
@@ -56,12 +54,11 @@ public class JpaFeedbackService implements FeedbackService {
 
     @Override
     public Page<Feedback> getAssigneeFeedbacks(Pageable pageable, Long assigneeId) {
-        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.getUserByLogin(userLogin);
+        User user = userService.getCurrentUser();
         User assignee = userService.getUserById(assigneeId);
         Page<Feedback> feedbacks = feedbackRepository.findAllByUserId(pageable, assigneeId);
         if (!(user.getRole().equals(Role.MANAGER) || user.equals(assignee))) {
-            throw new NoAccessException("The user with login: " + userLogin + " has no access to get these feedbacks");
+            throw new NoAccessException("The user with login: " + user.getEmail() + " has no access to get these feedbacks");
         } else if (Objects.isNull(feedbacks)) {
             throw new FeedbackNotFoundException("Feedbacks are not found");
         }

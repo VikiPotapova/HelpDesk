@@ -30,11 +30,11 @@ public class User {
 
     @Column(nullable = false)
     @Size(max = 100)
-    @Pattern(regexp = "^\\S+@\\S+\\.\\S+$")
+    //@Pattern(regexp = "^\\S+@\\S+\\.\\S+$")
     private String email;
 
     @Column(nullable = false)
-    @Size(min = 6, max = 20)
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).$")
+    @Size(min = 6, max = 100)
+    // @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).$")
     private String password;
 }

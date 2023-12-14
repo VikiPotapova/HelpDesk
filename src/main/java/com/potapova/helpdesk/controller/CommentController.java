@@ -22,7 +22,7 @@ public class CommentController {
     private final CommentService commentService;
     private final ModelMapper modelMapper;
 
-    @PostMapping("/create/tickets/{ticketId}")
+    @PostMapping("/tickets/{ticketId}")
     public ResponseEntity<CommentOfTicketDTO> createComment(
             @PathVariable Long ticketId, @RequestBody CommentOfTicketDTO commentOfTicketDTO) {
         Comment comment = commentService.createComment(modelMapper.map(commentOfTicketDTO, Comment.class), ticketId);
