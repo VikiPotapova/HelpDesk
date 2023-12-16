@@ -1,6 +1,10 @@
 package com.potapova.helpdesk.service.impl;
 
-import com.potapova.helpdesk.domain.*;
+import com.potapova.helpdesk.domain.Feedback;
+import com.potapova.helpdesk.domain.Role;
+import com.potapova.helpdesk.domain.Status;
+import com.potapova.helpdesk.domain.Ticket;
+import com.potapova.helpdesk.domain.User;
 import com.potapova.helpdesk.exceptionResolver.FeedbackNotFoundException;
 import com.potapova.helpdesk.exceptionResolver.NoAccessException;
 import com.potapova.helpdesk.repository.FeedbackRepository;
@@ -12,7 +16,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;

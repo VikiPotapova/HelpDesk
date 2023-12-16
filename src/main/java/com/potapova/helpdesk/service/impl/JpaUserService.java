@@ -8,9 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-import java.util.Optional;
-
 @RequiredArgsConstructor
 @Service
 public class JpaUserService implements UserService {
@@ -34,5 +31,10 @@ public class JpaUserService implements UserService {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.getByEmail(login).orElseThrow(() ->
                 new UserNotFoundException("User with login: " + login + " not found"));
+    }
+
+    @Override
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
     }
 }

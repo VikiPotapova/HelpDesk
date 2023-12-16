@@ -1,6 +1,5 @@
 package com.potapova.helpdesk.security.filter;
 
-import com.potapova.helpdesk.security.service.CustomUserDetailService;
 import com.potapova.helpdesk.security.service.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

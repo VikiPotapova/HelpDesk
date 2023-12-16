@@ -16,14 +16,19 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class TicketForUpdateDTO {
+
     @NotBlank
     private String name;
+
     @NotBlank
     private String description;
+
     @NotNull
     private LocalDate desiredResolutionDate;
+
     @NotBlank
     private Category category;
+
     @NotNull
     private Urgency urgency;
 }

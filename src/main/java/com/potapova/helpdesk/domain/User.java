@@ -1,7 +1,12 @@
 package com.potapova.helpdesk.domain;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,11 +36,9 @@ public class User {
 
     @Column(nullable = false)
     @Size(max = 100)
-    //@Pattern(regexp = "^\\S+@\\S+\\.\\S+$")
     private String email;
 
     @Column(nullable = false)
     @Size(min = 6, max = 100)
-    // @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).$")
     private String password;
 }

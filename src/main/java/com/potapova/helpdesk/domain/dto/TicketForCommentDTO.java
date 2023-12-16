@@ -14,10 +14,13 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class TicketForCommentDTO {
+
     @NotBlank
     private String name;
+
     @NotBlank
     private String description;
+
     @NotNull
     private LocalDate desiredResolutionDate;
 }

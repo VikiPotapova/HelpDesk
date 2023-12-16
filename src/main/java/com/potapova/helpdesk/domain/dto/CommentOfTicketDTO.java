@@ -15,10 +15,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class CommentOfTicketDTO {
+
     @CreationTimestamp
     private LocalDateTime date;
+
     @NotNull
     private UserNameDTO user;
+
     @NotBlank
     private String text;
 }

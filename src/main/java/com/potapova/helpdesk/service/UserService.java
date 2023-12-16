@@ -8,4 +8,6 @@ public interface UserService {
     User getUserByLogin(String login);
 
     User getCurrentUser();
+
+    void deleteUserById(Long id);
 }
