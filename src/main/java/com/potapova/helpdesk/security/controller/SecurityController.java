@@ -33,6 +33,6 @@ public class SecurityController {
         if (token.isPresent()) {
             return new ResponseEntity<>(new AuthResponse(token.get()), HttpStatus.CREATED);
         }
-        return new ResponseEntity<AuthResponse>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }

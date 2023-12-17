@@ -1,6 +1,8 @@
 package com.potapova.helpdesk.service.impl;
 
+import com.potapova.helpdesk.domain.Role;
 import com.potapova.helpdesk.domain.User;
+import com.potapova.helpdesk.exceptionResolver.NoAccessException;
 import com.potapova.helpdesk.exceptionResolver.UserNotFoundException;
 import com.potapova.helpdesk.repository.UserRepository;
 import com.potapova.helpdesk.service.UserService;
@@ -35,6 +37,10 @@ public class JpaUserService implements UserService {
 
     @Override
     public void deleteUserById(Long id) {
+        User user = getCurrentUser();
+        if (!user.getRole().equals(Role.MANAGER)) {
+           throw new NoAccessException("User with login: " + user.getEmail() + " has no access to this action");
+        }
         userRepository.deleteById(id);
     }
 }

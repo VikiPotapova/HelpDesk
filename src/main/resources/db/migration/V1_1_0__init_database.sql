@@ -26,15 +26,6 @@ CREATE TABLE ticket
     FOREIGN KEY (approver_id) REFERENCES users (id)
 );
 
-CREATE TABLE attachment
-(
-    id        BIGSERIAL PRIMARY KEY NOT NULL,
-    url       varchar               not null,
-    ticket_id bigint                not null,
-    name      varchar(20)           not null,
-    FOREIGN KEY (ticket_id) REFERENCES ticket (id)
-);
-
 CREATE TABLE comment
 (
     id        BIGSERIAL PRIMARY KEY NOT NULL,

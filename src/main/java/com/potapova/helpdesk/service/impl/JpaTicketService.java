@@ -103,8 +103,8 @@ public class JpaTicketService implements TicketService {
                 addToHistory(existingTicket, user, "The ticket status is changed", "The status was changed to " +
                         status.name());
             }
-        } else if (existingTicket.getStatus().equals(Status.DRAFT) && (existingTicket.getOwner().equals(user))) {
-            if (status.equals(Status.CANCELLED)) {
+        } else if (existingTicket.getStatus().equals(Status.DRAFT) || existingTicket.getStatus().equals(Status.DECLINED) && (existingTicket.getOwner().equals(user))) {
+            if (status.equals(Status.CANCELLED) || status.equals(Status.NEW)) {
                 existingTicket.setStatus(status);
                 ticketRepository.save(existingTicket);
                 addToHistory(existingTicket, user, "The ticket status is changed", "The status was changed to " +
