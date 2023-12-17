@@ -41,27 +41,26 @@ public class SpringSecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers(new AntPathRequestMatcher("/tickets/**", "POST")).hasRole("EMPLOYEE")
+                                .requestMatchers(new AntPathRequestMatcher("/tickets", "POST")).hasRole("EMPLOYEE")
                                 .requestMatchers(new AntPathRequestMatcher("/tickets", "GET")).hasAnyRole(
                                         "EMPLOYEE", "MANAGER", "ENGINEER")
-                                .requestMatchers(new AntPathRequestMatcher("/tickets/getAll", "GET")).hasAnyRole(
-                                        "EMPLOYEE", "MANAGER", "ENGINEER"
-                                )
                                 .requestMatchers(new AntPathRequestMatcher("/tickets/status", "PATCH")).hasAnyRole(
                                         "EMPLOYEE", "MANAGER", "ENGINEER"
                                 )
                                 .requestMatchers(new AntPathRequestMatcher("/tickets", "PUT")).hasRole("EMPLOYEE")
+                                .requestMatchers(new AntPathRequestMatcher("/users", "GET")).hasRole("MANAGER")
+                                .requestMatchers(new AntPathRequestMatcher("/users", "DELETE")).hasRole("MANAGER")
 
                                 .requestMatchers(new AntPathRequestMatcher("/histories/tickets", "GET")).hasRole("MANAGER")
 
-                                .requestMatchers(new AntPathRequestMatcher("/comments/users", "POST")).hasAnyRole(
+                                .requestMatchers(new AntPathRequestMatcher("/comments/tickets", "POST")).hasAnyRole(
                                         "EMPLOYEE", "MANAGER", "ENGINEER"
                                 )
                                 .requestMatchers(new AntPathRequestMatcher("/comments/tickets", "GET")).hasAnyRole(
                                         "EMPLOYEE", "MANAGER", "ENGINEER"
                                 )
 
-                                .requestMatchers(new AntPathRequestMatcher("/feedbacks", "POST")).hasRole("EMPLOYEE")
+                                .requestMatchers(new AntPathRequestMatcher("/feedbacks/tickets", "POST")).hasRole("EMPLOYEE")
                                 .requestMatchers(new AntPathRequestMatcher("/feedbacks", "GET")).hasAnyRole(
                                         "EMPLOYEE", "MANAGER", "ENGINEER"
                                 )

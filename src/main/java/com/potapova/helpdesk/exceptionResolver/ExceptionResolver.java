@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class ExceptionResolver {
+
     @ExceptionHandler(NoAccessException.class)
     public ResponseEntity<String> noAccessByIdException(NoAccessException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);

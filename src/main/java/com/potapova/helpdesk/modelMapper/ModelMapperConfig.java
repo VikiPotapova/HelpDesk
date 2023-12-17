@@ -1,4 +1,4 @@
-package com.potapova.helpdesk.ModelMapper;
+package com.potapova.helpdesk.modelMapper;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

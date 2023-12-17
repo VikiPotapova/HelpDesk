@@ -17,16 +17,22 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class TicketDTO {
+
     @NotBlank
     private String name;
+
     @NotBlank
     private String description;
+
     @NotNull
     private LocalDate desiredResolutionDate;
+
     @NotNull
     private Category category;
+
     @NotNull
     private Urgency urgency;
+
     @NotNull
     private Status status;
 }
