@@ -17,15 +17,18 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     Page<Ticket> findOwnersTickets(Pageable pageable, String login);
 
     @Query("""
-            SELECT t FROM Ticket t 
+            SELECT t FROM Ticket t
+            LEFT JOIN t.assignee 
             WHERE t.status='APPROVED'
-            OR (t.assignee.email=:login AND (t.status='IN_PROGRESS' OR t.status='DONE'))
+            OR (t.assignee.email=:login 
+            AND (t.status='IN_PROGRESS' OR t.status='DONE'))
             """)
     Page<Ticket> findAssigneesTickets(Pageable pageable, String login);
 
     @Query("""
-            SELECT t FROM Ticket t 
-            WHERE t.status='NEW'
+            SELECT t FROM Ticket t
+            LEFT JOIN t.approver
+            WHERE t.status='NEW' 
             OR (t.approver.email=:login 
             AND (t.status='APPROVED' OR t.status='DECLINED' OR t.status='IN_PROGRESS' OR t.status='DONE'))
             """)

@@ -53,14 +53,14 @@ public class TicketController {
     }
 
     @PatchMapping("/status/{ticketId}")
-    public ResponseEntity<Void> updateTicketStatus(@PathVariable Long ticketId, @RequestParam Status status) {
+    public ResponseEntity<HttpStatus> updateTicketStatus(@PathVariable Long ticketId, @RequestParam Status status) {
         ticketService.updateTicketStatus(status, ticketId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/{ticketId}")
-    public ResponseEntity<Void> updateTicket(@PathVariable Long ticketId,
-                                             @RequestBody @Valid TicketForUpdateDTO ticketForUpdateDTO) {
+    public ResponseEntity<HttpStatus> updateTicket(@PathVariable Long ticketId,
+                                                   @RequestBody TicketForUpdateDTO ticketForUpdateDTO) {
         ticketService.updateTicketById(ticketForUpdateDTO, ticketId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

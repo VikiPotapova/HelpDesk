@@ -16,6 +16,4 @@ public interface TicketService {
     void updateTicketById(TicketForUpdateDTO ticketForUpdateDTO, Long ticketId);
 
     void updateTicketStatus(Status status, Long ticketId);
-
-
 }
