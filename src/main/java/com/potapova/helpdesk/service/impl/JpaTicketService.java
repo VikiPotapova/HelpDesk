@@ -142,6 +142,4 @@ public class JpaTicketService implements TicketService {
                 .build();
         historyService.saveTicketToHistory(history);
     }
-
-
 }

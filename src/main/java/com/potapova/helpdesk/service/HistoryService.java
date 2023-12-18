@@ -8,4 +8,6 @@ public interface HistoryService {
     void saveTicketToHistory(History history);
 
     Page<History> getTicketHistory(Pageable pageable, Long ticketId);
+
+    void deleteHistoryById(Long id);
 }

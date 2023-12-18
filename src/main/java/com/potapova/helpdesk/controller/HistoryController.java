@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,5 +30,11 @@ public class HistoryController {
             @PathVariable Long ticketId) {
         return new ResponseEntity<>(historyService.getTicketHistory(pageable, ticketId)
                 .map(history -> modelMapper.map(history, HistoryDTO.class)), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteHistoryById(@PathVariable Long id) {
+        historyService.deleteHistoryById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

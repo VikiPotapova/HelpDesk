@@ -10,4 +10,8 @@ public interface FeedbackService {
     Feedback getFeedbackByTicketId(Long ticketId);
 
     Page<Feedback> getAssigneeFeedbacks(Pageable pageable, Long assigneeId);
+
+    void updateFeedbackText(Long id, String text);
+
+    void deleteFeedbackById(Long id);
 }

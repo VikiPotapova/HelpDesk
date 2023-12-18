@@ -8,4 +8,8 @@ public interface CommentService {
     Comment createComment(Comment comment, Long ticketId);
 
     Page<Comment> getCommentsListByTicketId(Pageable pageable, Long ticketId);
+
+    void deleteCommentById(Long id);
+
+    void updateCommentText(Long id, String text);
 }

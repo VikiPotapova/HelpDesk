@@ -3,6 +3,7 @@ package com.potapova.helpdesk.service.impl;
 import com.potapova.helpdesk.domain.History;
 import com.potapova.helpdesk.domain.Role;
 import com.potapova.helpdesk.domain.User;
+import com.potapova.helpdesk.exceptionResolver.HistoryNotFoundException;
 import com.potapova.helpdesk.exceptionResolver.NoAccessException;
 import com.potapova.helpdesk.repository.HistoryRepository;
 import com.potapova.helpdesk.service.HistoryService;
@@ -31,5 +32,15 @@ public class JpaHistoryService implements HistoryService {
             throw new NoAccessException("User with login: " + user.getEmail() + " has no access to this action");
         }
         return historyRepository.findByTicketId(pageable, ticketId);
+    }
+
+    @Override
+    public void deleteHistoryById(Long id) {
+        User user = userService.getCurrentUser();
+        History history = historyRepository.findById(id).orElseThrow(() -> new HistoryNotFoundException("History is not found"));
+        if (!(history.getUser().equals(user) || user.getRole().equals(Role.MANAGER))) {
+            throw new NoAccessException("The user with login: " + user.getEmail() + " has no access to delete this history");
+        }
+        historyRepository.deleteById(id);
     }
 }

@@ -1,5 +1,6 @@
 package com.potapova.helpdesk.service;
 
+import com.potapova.helpdesk.domain.Role;
 import com.potapova.helpdesk.domain.User;
 
 public interface UserService {
@@ -8,6 +9,10 @@ public interface UserService {
     User getUserByLogin(String login);
 
     User getCurrentUser();
+
+    void updateUserRoleById(Long id, Role role);
+
+    void updateUserEmail(String newEmail);
 
     void deleteUserById(Long id);
 }
