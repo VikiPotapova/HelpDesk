@@ -67,4 +67,25 @@ public class JpaFeedbackService implements FeedbackService {
         }
         return feedbacks;
     }
+
+    @Override
+    public void updateFeedbackText(Long id, String text) {
+        User user = userService.getCurrentUser();
+        Feedback feedback = feedbackRepository.findById(id).orElseThrow(() -> new FeedbackNotFoundException("Feedback not found"));
+        if (!(feedback.getUser().equals(user))) {
+            throw new NoAccessException("The user with login: " + user.getEmail() + " has no access to update this feedback");
+        }
+        feedback.setText(text);
+        feedbackRepository.save(feedback);
+    }
+
+    @Override
+    public void deleteFeedbackById(Long id) {
+        User user = userService.getCurrentUser();
+        Feedback feedback = feedbackRepository.findById(id).orElseThrow(() -> new FeedbackNotFoundException("Feedback is not found"));
+        if (!(feedback.getUser().equals(user) || user.getRole().equals(Role.MANAGER))) {
+            throw new NoAccessException("The user with login: " + user.getEmail() + " has no access to delete this feedback");
+        }
+        feedbackRepository.deleteById(id);
+    }
 }

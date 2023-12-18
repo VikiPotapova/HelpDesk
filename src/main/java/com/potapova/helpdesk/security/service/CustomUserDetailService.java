@@ -24,4 +24,3 @@ public class CustomUserDetailService implements UserDetailsService {
                 .build();
     }
 }
-

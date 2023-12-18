@@ -1,5 +1,6 @@
 package com.potapova.helpdesk.security.service;
 
+import com.potapova.helpdesk.domain.Role;
 import com.potapova.helpdesk.domain.User;
 import com.potapova.helpdesk.exceptionResolver.SameUserInDatabaseException;
 import com.potapova.helpdesk.exceptionResolver.UserNotFoundException;
@@ -38,11 +39,10 @@ public class SecurityService {
         User newUser = User.builder()
                 .firstName(registrationDTO.getFirstName())
                 .lastName(registrationDTO.getLastName())
-                .role(registrationDTO.getRole())
+                .role(Role.EMPLOYEE)
                 .email(registrationDTO.getEmail())
                 .password(passwordEncoder.encode(registrationDTO.getPassword()))
                 .build();
         userRepository.save(newUser);
-
     }
 }

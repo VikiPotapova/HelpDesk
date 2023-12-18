@@ -36,10 +36,28 @@ public class JpaUserService implements UserService {
     }
 
     @Override
+    public void updateUserRoleById(Long id, Role role) {
+        User user = getCurrentUser();
+        if (!user.getRole().equals(Role.MANAGER)) {
+            throw new NoAccessException("User with login: " + user.getEmail() + " has no access to this action");
+        }
+        User userForUpdate = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        userForUpdate.setRole(role);
+        userRepository.save(userForUpdate);
+    }
+
+    @Override
+    public void updateUserEmail(String newEmail) {
+        User userForUpdate = getCurrentUser();
+        userForUpdate.setEmail(newEmail);
+        userRepository.save(userForUpdate);
+    }
+
+    @Override
     public void deleteUserById(Long id) {
         User user = getCurrentUser();
         if (!user.getRole().equals(Role.MANAGER)) {
-           throw new NoAccessException("User with login: " + user.getEmail() + " has no access to this action");
+            throw new NoAccessException("User with login: " + user.getEmail() + " has no access to this action");
         }
         userRepository.deleteById(id);
     }
