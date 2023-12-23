@@ -41,7 +41,7 @@ Project is created with:
 * PostgreSQL;
 * Maven;
 * JUnit 5;
-* Mochito.
+* Mockito.
 	
 ## Setup
 
